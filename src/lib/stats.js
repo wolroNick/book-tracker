@@ -50,9 +50,10 @@ function topCounts(values, limit) {
     .map(([label, value]) => ({ label, value }));
 }
 
-// year: konkretny rok (liczba) albo 'all'.
-export function computeStats(books, year) {
-  const read = books.filter((b) => b.status === 'przeczytane');
+// year: konkretny rok (liczba) albo 'all'; forma: '' (wszystkie) albo konkretna forma.
+export function computeStats(books, year, forma = '') {
+  const allRead = books.filter((b) => b.status === 'przeczytane');
+  const read = forma ? allRead.filter((b) => b.forma === forma) : allRead;
   const inScope = year === 'all' ? read : read.filter((b) => yearOf(b.data_zakonczenia) === year);
 
   const pages = inScope.map((b) => num(b.liczba_stron)).filter((n) => n !== null);
@@ -109,9 +110,19 @@ export function computeStats(books, year) {
     longest: byPages[0] || null,
     fastest: fastest ? { book: fastest.b, days: fastest.days } : null,
     undated,
+    forms: formCounts(year === 'all' ? allRead : allRead.filter((b) => yearOf(b.data_zakonczenia) === year)),
     reading: books.filter((b) => b.status === 'czytam').length,
     toRead: books.filter((b) => b.status === 'do przeczytania').length,
   };
+}
+
+// Liczba przeczytanych książek w każdej formie (bez formy na końcu).
+function formCounts(list) {
+  const order = ['papier', 'e-book', 'audiobook'];
+  const result = order.map((f) => ({ key: f, value: list.filter((b) => b.forma === f).length }));
+  const none = list.filter((b) => !order.includes(b.forma)).length;
+  if (none) result.push({ key: '', value: none });
+  return result.filter((r) => r.value > 0);
 }
 
 // Postęp celu rocznego. Dla bieżącego roku liczy też, czy jesteś przed czy za planem.

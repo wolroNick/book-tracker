@@ -10,8 +10,10 @@
 
 const HEADERS = [
   'id', 'tytul', 'autor', 'isbn', 'gatunek', 'liczba_stron', 'status',
-  'data_rozpoczecia', 'data_zakonczenia', 'ocena', 'notatki', 'okladka_url',
+  'data_rozpoczecia', 'data_zakonczenia', 'ocena', 'notatki', 'okladka_url', 'forma',
 ];
+// Kolumny dodawane automatycznie na końcu arkusza, jeśli ich brakuje.
+const OPTIONAL_HEADERS = ['forma'];
 const NUMBER_FIELDS = ['liczba_stron', 'ocena'];
 const DATE_FIELDS = ['data_rozpoczecia', 'data_zakonczenia'];
 
@@ -78,8 +80,14 @@ function getSheet_() {
 
 function readTable_() {
   const sheet = getSheet_();
-  const values = sheet.getDataRange().getValues();
-  const headers = (values[0] || []).map(function (h) { return String(h).trim(); });
+  let values = sheet.getDataRange().getValues();
+  let headers = (values[0] || []).map(function (h) { return String(h).trim(); });
+  const missingOptional = OPTIONAL_HEADERS.filter(function (h) { return headers.indexOf(h) === -1; });
+  if (missingOptional.length && headers.length) {
+    sheet.getRange(1, headers.length + 1, 1, missingOptional.length).setValues([missingOptional]);
+    values = sheet.getDataRange().getValues();
+    headers = values[0].map(function (h) { return String(h).trim(); });
+  }
   const missing = HEADERS.filter(function (h) { return headers.indexOf(h) === -1; });
   if (missing.length) {
     throw new Error('W pierwszym wierszu arkusza brakuje kolumn: ' + missing.join(', '));

@@ -71,7 +71,10 @@ export function BarList({ data }) {
           <span className="bar-label" title={d.label}>{d.label}</span>
           <span className="bar-track">
             <span className="bar-fill" style={{ width: `${(d.value / max) * 100}%` }} />
-            <span className="bar-value">{d.value}</span>
+            <span className="bar-value">
+              {d.value}
+              {d.note && <span className="bar-note"> · {d.note}</span>}
+            </span>
           </span>
         </li>
       ))}

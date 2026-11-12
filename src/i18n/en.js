@@ -129,4 +129,16 @@ export default {
   nowReading: 'Currently reading: {n}',
   toReadCount: 'To read: {n}',
   undatedNote: { one: '{n} read book has no finish date and is not counted in any year.', other: '{n} read books have no finish date and are not counted in any year.' },
+
+  'field.forma': 'Format',
+  'form.papier': 'Paper',
+  'form.e-book': 'E-book',
+  'form.audiobook': 'Audiobook',
+  allForms: 'All formats',
+  noForm: 'No format',
+  setPaper: 'Set format “paper” for books without one ({n})',
+  setPaperConfirm: 'Set format “paper” for all books without a format ({n})? The change will be saved to the sheet. You can fix exceptions manually afterwards.',
+  setPaperDone: 'Done – format “paper” set for {n} books.',
+  scriptOutdated: 'The script in your sheet is an older version and does not save the book format. Please update it (see README, “Aktualizacja skryptu”).',
+  chartForms: 'Reading format',
 };

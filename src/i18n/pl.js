@@ -134,4 +134,17 @@ export default {
   nowReading: 'Teraz czytasz: {n}',
   toReadCount: 'Do przeczytania: {n}',
   undatedNote: { one: '{n} przeczytana książka nie ma daty zakończenia i nie jest liczona w latach.', few: '{n} przeczytane książki nie mają daty zakończenia i nie są liczone w latach.', many: '{n} przeczytanych książek nie ma daty zakończenia i nie jest liczonych w latach.', other: '{n} przeczytanej książki nie ma daty zakończenia.' },
+
+  // Forma
+  'field.forma': 'Forma',
+  'form.papier': 'Papier',
+  'form.e-book': 'E-book',
+  'form.audiobook': 'Audiobook',
+  allForms: 'Wszystkie formy',
+  noForm: 'Bez formy',
+  setPaper: 'Ustaw formę „papier” dla książek bez formy ({n})',
+  setPaperConfirm: 'Ustawić formę „papier” dla wszystkich książek bez formy ({n})? Zmiana zapisze się w arkuszu. Wyjątki poprawisz potem ręcznie.',
+  setPaperDone: { one: 'Gotowe – ustawiono formę „papier” dla {n} książki.', few: 'Gotowe – ustawiono formę „papier” dla {n} książek.', many: 'Gotowe – ustawiono formę „papier” dla {n} książek.', other: 'Gotowe – ustawiono formę „papier” dla {n} książek.' },
+  scriptOutdated: 'Skrypt w arkuszu jest w starszej wersji i nie zapisuje formy książki. Zaktualizuj go (instrukcja w README, sekcja „Aktualizacja skryptu”).',
+  chartForms: 'Forma czytania',
 };

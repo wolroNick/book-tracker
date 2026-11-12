@@ -12,6 +12,7 @@ Dane są przechowywane w Twoim arkuszu Google, a aplikację można zainstalować
 - przycisk **„Poszukaj na Lubimyczytać”**, gdy okładki brak,
 - **„Uzupełnij brakujące okładki”** dla wszystkich książek naraz,
 - ocena 1–10, data rozpoczęcia i zakończenia, gatunek, liczba stron, notatki,
+- **forma**: papier 📖, e-book 📱 lub audiobook 🎧 – z ikonką na okładce, filtrem i statystykami,
 - filtrowanie (status, gatunek, ocena), sortowanie i wyszukiwarka,
 - widok siatki lub listy, interfejs po polsku lub angielsku,
 - **statystyki**: przeczytane książki i strony w roku, średnia ocena i czas czytania, cel roczny z tempem, wykresy miesięczne i roczne, rozkład ocen, ulubione gatunki i autorzy, wyróżnienia,
@@ -27,8 +28,10 @@ Pracuj na **kopii** swojego arkusza (Plik → Utwórz kopię).
 Pierwszy wiersz musi zawierać dokładnie te nagłówki (kolejność dowolna, dodatkowe kolumny są dozwolone i aplikacja ich nie zmienia):
 
 ```
-id  tytul  autor  isbn  gatunek  liczba_stron  status  data_rozpoczecia  data_zakonczenia  ocena  notatki  okladka_url
+id  tytul  autor  isbn  gatunek  liczba_stron  status  data_rozpoczecia  data_zakonczenia  ocena  notatki  okladka_url  forma
 ```
+
+Kolumnę `forma` (wartości `papier`, `e-book`, `audiobook`) skrypt doda sam na końcu arkusza, jeśli jej nie ma.
 
 - `status`: `przeczytane`, `czytam` lub `do przeczytania`
 - `ocena`: liczba 1–10

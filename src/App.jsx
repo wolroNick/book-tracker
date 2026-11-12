@@ -12,7 +12,7 @@ import FillCoversDialog from './components/FillCoversDialog.jsx';
 import StatsView from './components/StatsView.jsx';
 import { ImageIcon, PlusIcon, RefreshIcon, SettingsIcon } from './components/Icons.jsx';
 
-const DEFAULT_FILTERS = { query: '', status: 'all', genre: '', minRating: 0, sort: 'added', desc: true };
+const DEFAULT_FILTERS = { query: '', status: 'all', genre: '', forma: '', minRating: 0, sort: 'added', desc: true };
 
 // Porównanie bez wielkości liter i polskich znaków diakrytycznych.
 const fold = (s) => s.toLocaleLowerCase('pl').normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/ł/g, 'l');
@@ -26,7 +26,9 @@ function compareBooks(a, b, field) {
 export default function App() {
   const { t, errorText } = useI18n();
   const [settings, setSettingsState] = useState(() => load('bt.settings', { url: '', key: '' }));
-  const { books, syncing, error, refresh, saveBook, deleteBook, saveMany, configured } = useBooks(settings);
+  const { books, syncing, error, refresh, saveBook, deleteBook, saveMany, configured, scriptOutdated } = useBooks(settings);
+  const [bulkBusy, setBulkBusy] = useState(false);
+  const [bulkMsg, setBulkMsg] = useState(null); // { ok: bool, text }
 
   const { goals, setGoal, syncedWithSheet } = useGoals(settings);
   const [tab, setTabState] = useState(() => load('bt.tab', 'books'));
@@ -70,6 +72,23 @@ export default function App() {
   }, [books]);
 
   const missingCovers = useMemo(() => books.filter((b) => !b.okladka_url), [books]);
+  const missingForm = useMemo(() => books.filter((b) => !b.forma), [books]);
+
+  // Jednorazowe ustawienie formy „papier” dla wszystkich książek bez formy.
+  const setPaperForAll = async () => {
+    const n = missingForm.length;
+    if (!window.confirm(t('setPaperConfirm', { n }))) return;
+    setBulkBusy(true);
+    setBulkMsg(null);
+    try {
+      await saveMany(missingForm.map((b) => ({ ...b, forma: 'papier' })));
+      setBulkMsg({ ok: true, text: t('setPaperDone', { n }) });
+    } catch (err) {
+      setBulkMsg({ ok: false, text: errorText(err) });
+    } finally {
+      setBulkBusy(false);
+    }
+  };
 
   const visible = useMemo(() => {
     const q = fold(filters.query.trim());
@@ -78,6 +97,7 @@ export default function App() {
       .filter(({ b }) => {
         if (filters.status !== 'all' && b.status !== filters.status) return false;
         if (filters.genre && b.gatunek !== filters.genre) return false;
+        if (filters.forma === 'none' ? b.forma : filters.forma && b.forma !== filters.forma) return false;
         if (filters.minRating && !(Number(b.ocena) >= filters.minRating)) return false;
         if (q && !fold(`${b.tytul} ${b.autor} ${b.isbn} ${b.gatunek}`).includes(q)) return false;
         return true;
@@ -145,6 +165,8 @@ export default function App() {
             {errorText(error)} {books.length > 0 && t('offlineData')}
           </div>
         )}
+        {scriptOutdated && <div className="msg msg-info banner">{t('scriptOutdated')}</div>}
+        {bulkMsg && <div className={`msg banner ${bulkMsg.ok ? 'msg-ok' : 'msg-error'}`}>{bulkMsg.text}</div>}
 
         {tab === 'stats' ? (
           <StatsView
@@ -170,6 +192,11 @@ export default function App() {
           {configured && missingCovers.length > 0 && (
             <button type="button" className="btn btn-small" onClick={() => setShowFill(true)}>
               <ImageIcon /> {t('fillCovers', { n: missingCovers.length })}
+            </button>
+          )}
+          {configured && !scriptOutdated && missingForm.length > 0 && (
+            <button type="button" className="btn btn-small" onClick={setPaperForAll} disabled={bulkBusy}>
+              {bulkBusy ? t('saving') : <>📖 {t('setPaper', { n: missingForm.length })}</>}
             </button>
           )}
         </div>

@@ -11,6 +11,8 @@ export function useBooks(settings) {
   const [books, setBooksState] = useState(() => load(CACHE_KEY, []).map(normalizeBook));
   const [syncing, setSyncing] = useState(false);
   const [error, setError] = useState(null);
+  // Stara wersja skryptu nie zna kolumny „forma” – trzeba go zaktualizować.
+  const [scriptOutdated, setScriptOutdated] = useState(false);
   const booksRef = useRef(books);
 
   const setBooks = useCallback((next) => {
@@ -27,6 +29,7 @@ export function useBooks(settings) {
     setError(null);
     try {
       const list = await sheetApi.list(settings);
+      setScriptOutdated(list.length > 0 && !('forma' in list[0]));
       setBooks(list.map(normalizeBook));
     } catch (err) {
       setError(err);
@@ -71,5 +74,5 @@ export function useBooks(settings) {
     [settings, setBooks],
   );
 
-  return { books, syncing, error, setError, refresh, saveBook, deleteBook, saveMany, configured };
+  return { books, syncing, error, setError, refresh, saveBook, deleteBook, saveMany, configured, scriptOutdated };
 }

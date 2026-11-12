@@ -3,6 +3,7 @@ import { useI18n } from '../i18n/index.jsx';
 import { availableYears, computeStats, goalProgress } from '../lib/stats.js';
 import { ColumnChart, BarList } from './Charts.jsx';
 import BookCover from './BookCover.jsx';
+import { FORMS, FORM_ICONS } from '../lib/books.js';
 
 function StatTile({ label, value, sub }) {
   return (
@@ -99,7 +100,9 @@ export default function StatsView({ books, goals, setGoal, goalsSynced, onOpen }
   const years = useMemo(() => availableYears(books), [books]);
   const [year, setYear] = useState(years[0]);
   const [metric, setMetric] = useState('books');
-  const stats = useMemo(() => computeStats(books, year), [books, year]);
+  const [forma, setForma] = useState('');
+  const stats = useMemo(() => computeStats(books, year, forma), [books, year, forma]);
+  const formTotal = stats.forms.reduce((a, f) => a + f.value, 0);
 
   const nf = (v, digits = 0) => (v === null ? '–' : v.toLocaleString(lang, { maximumFractionDigits: digits }));
   const monthName = (m, style) => new Date(2000, m, 1).toLocaleString(lang, { month: style });
@@ -129,7 +132,22 @@ export default function StatsView({ books, goals, setGoal, goalsSynced, onOpen }
         ))}
       </div>
 
-      {year !== 'all' && (
+      <div className="status-tabs" role="tablist" aria-label={t('field.forma')}>
+        {['', ...FORMS].map((f) => (
+          <button
+            key={f || 'all'}
+            type="button"
+            role="tab"
+            aria-selected={forma === f}
+            className={`tab tab-small ${forma === f ? 'active' : ''}`}
+            onClick={() => setForma(f)}
+          >
+            {f ? `${FORM_ICONS[f]} ${t(`form.${f}`)}` : t('allForms')}
+          </button>
+        ))}
+      </div>
+
+      {year !== 'all' && !forma && (
         <GoalCard
           key={year}
           year={year}
@@ -166,6 +184,19 @@ export default function StatsView({ books, goals, setGoal, goalsSynced, onOpen }
           format={(v) => t('nBooks', { n: nf(v) })}
         />
       </section>
+
+      {!forma && formTotal > 0 && (
+        <section className="card">
+          <h3>{t('chartForms')}</h3>
+          <BarList
+            data={stats.forms.map((f) => ({
+              label: f.key ? `${FORM_ICONS[f.key]} ${t(`form.${f.key}`)}` : t('noForm'),
+              value: f.value,
+              note: `${Math.round((f.value / formTotal) * 100)}%`,
+            }))}
+          />
+        </section>
+      )}
 
       <div className="card-row">
         <section className="card">

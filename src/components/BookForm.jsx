@@ -3,7 +3,7 @@ import Modal from './Modal.jsx';
 import BookCover from './BookCover.jsx';
 import { ExternalIcon } from './Icons.jsx';
 import { useI18n } from '../i18n/index.jsx';
-import { STATUSES, emptyBook, today } from '../lib/books.js';
+import { FORMS, FORM_ICONS, STATUSES, emptyBook, today } from '../lib/books.js';
 import { findCover, lubimyczytacUrl, searchBooks } from '../lib/bookSearch.js';
 
 function BookSearch({ initialQuery, onPick }) {
@@ -244,6 +244,23 @@ export default function BookForm({ book, genres, onSave, onDelete, onClose }) {
                   onClick={() => setStatus(s)}
                 >
                   {t(`status.${s}`)}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          <div className="field field-full">
+            <span>{t('field.forma')}</span>
+            <div className="segmented">
+              {FORMS.map((f) => (
+                <button
+                  key={f}
+                  type="button"
+                  className={form.forma === f ? 'active' : ''}
+                  aria-pressed={form.forma === f}
+                  onClick={() => set('forma', form.forma === f ? '' : f)}
+                >
+                  {FORM_ICONS[f]} {t(`form.${f}`)}
                 </button>
               ))}
             </div>

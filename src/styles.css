@@ -94,7 +94,8 @@ textarea { resize: vertical; }
 .sort-group select { flex: 1; }
 .view-toggle { display: flex; gap: 4px; margin-left: auto; }
 
-.list-info { display: flex; align-items: center; justify-content: space-between; gap: 8px; flex-wrap: wrap; margin-bottom: 12px; color: var(--muted); font-size: 0.92rem; }
+.list-info > span { margin-right: auto; }
+.list-info { display: flex; align-items: center; justify-content: flex-end; gap: 8px; flex-wrap: wrap; margin-bottom: 12px; color: var(--muted); font-size: 0.92rem; }
 .empty { text-align: center; color: var(--muted); padding: 48px 0; }
 
 /* ---------- Okładki ---------- */
@@ -302,3 +303,14 @@ textarea { resize: vertical; }
 .highlight-cover .cover-placeholder-title, .list-cover .cover-placeholder-title, .result-cover .cover-placeholder-title { font-size: 0.55rem; word-break: break-word; -webkit-line-clamp: 4; }
 .highlight-cover .cover-placeholder-author, .list-cover .cover-placeholder-author, .result-cover .cover-placeholder-author { display: none; }
 button { -webkit-tap-highlight-color: transparent; }
+
+/* Forma (papier / e-book / audiobook) */
+.form-badge {
+  position: absolute; top: 6px; left: 6px;
+  width: 26px; height: 26px; display: flex; align-items: center; justify-content: center;
+  border-radius: 999px; background: rgba(255, 255, 255, 0.92); font-size: 0.85rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+}
+.bar-note { font-weight: normal; color: var(--muted); }
+.tab-small { padding: 5px 12px; font-size: 0.88rem; }
+.list-info .btn { white-space: normal; text-align: left; max-width: 100%; }

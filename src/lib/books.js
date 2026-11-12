@@ -1,11 +1,15 @@
 // Model książki – nazwy pól odpowiadają nagłówkom kolumn w arkuszu.
 export const FIELDS = [
   'id', 'tytul', 'autor', 'isbn', 'gatunek', 'liczba_stron', 'status',
-  'data_rozpoczecia', 'data_zakonczenia', 'ocena', 'notatki', 'okladka_url',
+  'data_rozpoczecia', 'data_zakonczenia', 'ocena', 'notatki', 'okladka_url', 'forma',
 ];
 
 // Wartości statusu dokładnie tak, jak są zapisane w arkuszu.
 export const STATUSES = ['przeczytane', 'czytam', 'do przeczytania'];
+
+// Forma, w jakiej książka została przeczytana/wysłuchana (wartości jak w arkuszu).
+export const FORMS = ['papier', 'e-book', 'audiobook'];
+export const FORM_ICONS = { papier: '📖', 'e-book': '📱', audiobook: '🎧' };
 
 export function emptyBook() {
   const book = Object.fromEntries(FIELDS.map((f) => [f, '']));

@@ -1,5 +1,16 @@
 import BookCover from './BookCover.jsx';
 import { useI18n } from '../i18n/index.jsx';
+import { FORM_ICONS } from '../lib/books.js';
+
+function FormBadge({ forma }) {
+  const { t } = useI18n();
+  if (!FORM_ICONS[forma]) return null;
+  return (
+    <span className="form-badge" title={t(`form.${forma}`)} aria-label={t(`form.${forma}`)}>
+      {FORM_ICONS[forma]}
+    </span>
+  );
+}
 
 function Rating({ value }) {
   if (!value) return null;
@@ -20,6 +31,7 @@ export function BookGrid({ books, onOpen }) {
           <button type="button" className="grid-card" onClick={() => onOpen(b)}>
             <div className="grid-cover-wrap">
               <BookCover book={b} />
+              <FormBadge forma={b.forma} />
               <Rating value={b.ocena} />
             </div>
             <span className="grid-title">{b.tytul}</span>
@@ -44,6 +56,7 @@ export function BookList({ books, onOpen }) {
               <span className="list-author">{b.autor}</span>
               <div className="list-meta">
                 <StatusChip status={b.status} />
+                {FORM_ICONS[b.forma] && <span>{FORM_ICONS[b.forma]} {t(`form.${b.forma}`)}</span>}
                 {b.gatunek && <span>{b.gatunek}</span>}
                 {b.liczba_stron && <span>{b.liczba_stron} {t('pages')}</span>}
                 {(b.data_rozpoczecia || b.data_zakonczenia) && (
