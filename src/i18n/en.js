@@ -139,6 +139,8 @@ export default {
   setPaper: 'Set format “paper” for books without one ({n})',
   setPaperConfirm: 'Set format “paper” for all books without a format ({n})? The change will be saved to the sheet. You can fix exceptions manually afterwards.',
   setPaperDone: 'Done – format “paper” set for {n} books.',
-  scriptOutdated: 'The script in your sheet is an older version and does not save the book format. Please update it (see README, “Aktualizacja skryptu”).',
+  scriptOutdated: 'The app is connected to an older version of the script that does not save the book format. In Apps Script: Deploy → Manage deployments → ✏️ → Version: “New version” → Deploy. If you created a new deployment instead, paste its new URL in the app settings.',
+  scriptVersion: '(script version: {v})',
+  scriptOld: 'Note: this is an older script version – update the deployment (Version: “New version”).',
   chartForms: 'Reading format',
 };

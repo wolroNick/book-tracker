@@ -16,8 +16,11 @@ export default function SettingsDialog({ settings, onSave, onClose, welcome }) {
   const runTest = async () => {
     setTest({ state: 'loading', msg: '' });
     try {
-      await sheetApi.ping(current);
-      setTest({ state: 'ok', msg: t('connectionOk') });
+      const res = await sheetApi.ping(current);
+      const msg = res.version >= 3
+        ? `${t('connectionOk')} ${t('scriptVersion', { v: res.version })}`
+        : `${t('connectionOk')} ${t('scriptOld')}`;
+      setTest({ state: res.version >= 3 ? 'ok' : 'warn', msg });
     } catch (err) {
       setTest({ state: 'error', msg: errorText(err) });
     }
@@ -69,7 +72,7 @@ export default function SettingsDialog({ settings, onSave, onClose, welcome }) {
           {test.state === 'loading' ? t('testing') : t('testConnection')}
         </button>
       </div>
-      {test.msg && <p className={`msg ${test.state === 'ok' ? 'msg-ok' : 'msg-error'}`}>{test.msg}</p>}
+      {test.msg && <p className={`msg ${test.state === 'ok' ? 'msg-ok' : test.state === 'warn' ? 'msg-info' : 'msg-error'}`}>{test.msg}</p>}
 
       <label className="field">
         <span>{t('language')}</span>

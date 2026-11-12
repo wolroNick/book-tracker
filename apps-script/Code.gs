@@ -8,6 +8,9 @@
  *   SHEET_NAME – nazwa zakładki z książkami (opcjonalne, domyślnie pierwsza zakładka)
  */
 
+// Numer wersji skryptu – aplikacja pokazuje go po kliknięciu „Sprawdź połączenie”.
+const SCRIPT_VERSION = 3;
+
 const HEADERS = [
   'id', 'tytul', 'autor', 'isbn', 'gatunek', 'liczba_stron', 'status',
   'data_rozpoczecia', 'data_zakonczenia', 'ocena', 'notatki', 'okladka_url', 'forma',
@@ -18,7 +21,7 @@ const NUMBER_FIELDS = ['liczba_stron', 'ocena'];
 const DATE_FIELDS = ['data_rozpoczecia', 'data_zakonczenia'];
 
 function doGet() {
-  return json_({ ok: true, message: 'Book Tracker API działa. Połącz się z aplikacji.' });
+  return json_({ ok: true, version: SCRIPT_VERSION, message: 'Book Tracker API działa. Połącz się z aplikacji.' });
 }
 
 function doPost(e) {
@@ -43,7 +46,7 @@ function handle_(req) {
       switch (req.action) {
         case 'ping':
           readTable_(); // sprawdza też nagłówki
-          return json_({ ok: true });
+          return json_({ ok: true, version: SCRIPT_VERSION });
         case 'list':
           return json_({ ok: true, books: listBooks_() });
         case 'save':

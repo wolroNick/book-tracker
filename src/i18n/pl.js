@@ -145,6 +145,8 @@ export default {
   setPaper: 'Ustaw formę „papier” dla książek bez formy ({n})',
   setPaperConfirm: 'Ustawić formę „papier” dla wszystkich książek bez formy ({n})? Zmiana zapisze się w arkuszu. Wyjątki poprawisz potem ręcznie.',
   setPaperDone: { one: 'Gotowe – ustawiono formę „papier” dla {n} książki.', few: 'Gotowe – ustawiono formę „papier” dla {n} książek.', many: 'Gotowe – ustawiono formę „papier” dla {n} książek.', other: 'Gotowe – ustawiono formę „papier” dla {n} książek.' },
-  scriptOutdated: 'Skrypt w arkuszu jest w starszej wersji i nie zapisuje formy książki. Zaktualizuj go (instrukcja w README, sekcja „Aktualizacja skryptu”).',
+  scriptOutdated: 'Aplikacja łączy się ze starszą wersją skryptu, która nie zapisuje formy książki. W Apps Script: Wdróż → Zarządzaj wdrożeniami → ✏️ → Wersja: „Nowa wersja” → Wdróż. Jeśli zamiast tego utworzono nowe wdrożenie, wklej jego nowy adres w ustawieniach aplikacji.',
+  scriptVersion: '(wersja skryptu: {v})',
+  scriptOld: 'Uwaga: to starsza wersja skryptu – zaktualizuj wdrożenie (Wersja: „Nowa wersja”).',
   chartForms: 'Forma czytania',
 };
