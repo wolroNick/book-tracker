@@ -24,6 +24,12 @@ export function I18nProvider({ children }) {
   const t = useCallback(
     (key, vars) => {
       let text = dictionaries[lang][key] ?? dictionaries.pl[key] ?? key;
+      // Formy liczby mnogiej: { one, few, many, other } wybierane według vars.n.
+      if (typeof text === 'object') {
+        const n = Number(String(vars?.n ?? '').replace(/[^\d.,-]/g, '').replace(',', '.'));
+        const form = new Intl.PluralRules(lang).select(Number.isFinite(n) ? n : 0);
+        text = text[form] ?? text.other;
+      }
       if (vars) for (const [k, v] of Object.entries(vars)) text = text.replaceAll(`{${k}}`, v);
       return text;
     },

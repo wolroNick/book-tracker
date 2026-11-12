@@ -1,6 +1,7 @@
 import { useMemo, useState } from 'react';
 import { useI18n } from './i18n/index.jsx';
 import { useBooks } from './hooks/useBooks.js';
+import { useGoals } from './hooks/useGoals.js';
 import { load, save } from './lib/storage.js';
 import { STATUSES } from './lib/books.js';
 import Toolbar from './components/Toolbar.jsx';
@@ -8,6 +9,7 @@ import { BookGrid, BookList } from './components/BookViews.jsx';
 import BookForm from './components/BookForm.jsx';
 import SettingsDialog from './components/SettingsDialog.jsx';
 import FillCoversDialog from './components/FillCoversDialog.jsx';
+import StatsView from './components/StatsView.jsx';
 import { ImageIcon, PlusIcon, RefreshIcon, SettingsIcon } from './components/Icons.jsx';
 
 const DEFAULT_FILTERS = { query: '', status: 'all', genre: '', minRating: 0, sort: 'added', desc: true };
@@ -26,6 +28,13 @@ export default function App() {
   const [settings, setSettingsState] = useState(() => load('bt.settings', { url: '', key: '' }));
   const { books, syncing, error, refresh, saveBook, deleteBook, saveMany, configured } = useBooks(settings);
 
+  const { goals, setGoal, syncedWithSheet } = useGoals(settings);
+  const [tab, setTabState] = useState(() => load('bt.tab', 'books'));
+  const setTab = (v) => {
+    setTabState(v);
+    save('bt.tab', v);
+    window.scrollTo(0, 0);
+  };
   const [view, setViewState] = useState(() => load('bt.view', 'grid'));
   const [filters, setFiltersState] = useState(() => ({ ...DEFAULT_FILTERS, ...load('bt.filters', {}), query: '' }));
   const [editing, setEditing] = useState(null); // null | {} (nowa) | książka
@@ -115,6 +124,21 @@ export default function App() {
         </div>
       </header>
 
+      <nav className="main-tabs" role="tablist">
+        {['books', 'stats'].map((v) => (
+          <button
+            key={v}
+            type="button"
+            role="tab"
+            aria-selected={tab === v}
+            className={tab === v ? 'active' : ''}
+            onClick={() => setTab(v)}
+          >
+            {v === 'books' ? t('tabBooks') : t('tabStats')}
+          </button>
+        ))}
+      </nav>
+
       <main className="content">
         {error && (
           <div className="msg msg-error banner">
@@ -122,6 +146,16 @@ export default function App() {
           </div>
         )}
 
+        {tab === 'stats' ? (
+          <StatsView
+            books={books}
+            goals={goals}
+            setGoal={setGoal}
+            goalsSynced={syncedWithSheet}
+            onOpen={setEditing}
+          />
+        ) : (
+        <>
         <Toolbar
           filters={filters}
           setFilters={setFilters}
@@ -149,8 +183,11 @@ export default function App() {
         ) : (
           <BookList books={visible} onOpen={setEditing} />
         )}
+        </>
+        )}
       </main>
 
+      {tab === 'books' && (
       <button
         type="button"
         className="fab"
@@ -160,6 +197,7 @@ export default function App() {
       >
         <PlusIcon /> <span className="fab-label">{t('add')}</span>
       </button>
+      )}
 
       {editing && (
         <BookForm

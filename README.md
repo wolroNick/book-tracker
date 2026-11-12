@@ -14,6 +14,7 @@ Dane są przechowywane w Twoim arkuszu Google, a aplikację można zainstalować
 - ocena 1–10, data rozpoczęcia i zakończenia, gatunek, liczba stron, notatki,
 - filtrowanie (status, gatunek, ocena), sortowanie i wyszukiwarka,
 - widok siatki lub listy, interfejs po polsku lub angielsku,
+- **statystyki**: przeczytane książki i strony w roku, średnia ocena i czas czytania, cel roczny z tempem, wykresy miesięczne i roczne, rozkład ocen, ulubione gatunki i autorzy, wyróżnienia,
 - działa offline (pokazuje ostatnio pobrane dane).
 
 ---
@@ -69,6 +70,11 @@ Książki powinny być na **pierwszej zakładce** arkusza (albo ustaw właściwo
 
 Adres i klucz są zapisywane tylko na danym urządzeniu – na telefonie i komputerze trzeba je wpisać osobno.
 
+### Cel roczny
+
+Cel roczny (zakładka **Statystyki**) zapisuje się w skrypcie arkusza (właściwość `APP_CONFIG`), więc jest wspólny dla telefonu i komputera.
+Jeśli masz starszą wersję skryptu, cel zapisze się tylko na urządzeniu – wtedy zaktualizuj skrypt jak niżej.
+
 ### Aktualizacja skryptu
 
 Gdy zmienisz kod w Apps Script: **Wdróż → Zarządzaj wdrożeniami → ✏️ (edytuj) → Wersja: Nowa wersja → Wdróż**. Adres URL pozostaje ten sam.
@@ -100,6 +106,7 @@ Struktura:
 - `src/App.jsx` – główny widok, filtrowanie i sortowanie
 - `src/components/` – formularz książki, widoki siatki/listy, ustawienia, uzupełnianie okładek
 - `src/lib/sheetApi.js` – komunikacja ze skryptem arkusza
+- `src/lib/stats.js`, `src/components/StatsView.jsx`, `src/components/Charts.jsx` – statystyki i wykresy
 - `src/lib/bookSearch.js` – wyszukiwanie w Google Books / Open Library, linki do Lubimyczytać
 - `src/i18n/pl.js`, `src/i18n/en.js` – teksty interfejsu
 - `apps-script/Code.gs` – skrypt do wklejenia w arkuszu Google

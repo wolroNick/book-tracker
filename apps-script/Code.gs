@@ -51,6 +51,10 @@ function handle_(req) {
         case 'delete':
           deleteBook_(req.id);
           return json_({ ok: true });
+        case 'getConfig':
+          return json_({ ok: true, config: getConfig_() });
+        case 'setConfig':
+          return json_({ ok: true, config: setConfig_(req.config || {}) });
         default:
           return json_({ ok: false, error: 'Nieznana akcja: ' + req.action });
       }
@@ -192,6 +196,24 @@ function deleteBook_(id) {
     }
   }
   throw new Error('Nie znaleziono książki o id ' + id);
+}
+
+// Ustawienia aplikacji (np. cele roczne) – zapisywane we właściwościach skryptu,
+// dzięki czemu są wspólne dla telefonu i komputera.
+function getConfig_() {
+  const raw = PropertiesService.getScriptProperties().getProperty('APP_CONFIG');
+  try {
+    return raw ? JSON.parse(raw) : {};
+  } catch (err) {
+    return {};
+  }
+}
+
+function setConfig_(patch) {
+  const config = getConfig_();
+  Object.keys(patch).forEach(function (k) { config[k] = patch[k]; });
+  PropertiesService.getScriptProperties().setProperty('APP_CONFIG', JSON.stringify(config));
+  return config;
 }
 
 function json_(obj) {
