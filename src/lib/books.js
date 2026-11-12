@@ -13,12 +13,39 @@ export function emptyBook() {
   return book;
 }
 
+export const DATE_FIELDS = ['data_rozpoczecia', 'data_zakonczenia'];
+
+const pad = (n) => String(n).padStart(2, '0');
+const isoFromParts = (y, m, d) => `${y}-${pad(m)}-${pad(d)}`;
+
+// Zamienia datę w dowolnym typowym formacie na RRRR-MM-DD.
+// Obsługuje m.in. 2026-03-03, 3.03.2026, 03/03/2026, 2026/3/3,
+// pełny zapis daty z Google („Tue Mar 03 2026 00:00:00 GMT+0100”)
+// oraz numer seryjny daty z arkusza (np. 46084).
+export function normalizeDate(value) {
+  const s = String(value ?? '').trim();
+  if (!s) return '';
+  let m = s.match(/^(\d{4})[-/.](\d{1,2})[-/.](\d{1,2})$/);
+  if (m) return isoFromParts(m[1], m[2], m[3]);
+  m = s.match(/^(\d{1,2})[./-](\d{1,2})[./-](\d{4})$/);
+  if (m) return isoFromParts(m[3], m[2], m[1]); // format polski: dzień.miesiąc.rok
+  if (/^\d{5}(\.\d+)?$/.test(s)) {
+    // Numer seryjny arkusza: liczba dni od 30.12.1899.
+    const d = new Date(Date.UTC(1899, 11, 30) + Math.floor(Number(s)) * 86400000);
+    return isoFromParts(d.getUTCFullYear(), d.getUTCMonth() + 1, d.getUTCDate());
+  }
+  const parsed = new Date(s);
+  if (!isNaN(parsed)) return isoFromParts(parsed.getFullYear(), parsed.getMonth() + 1, parsed.getDate());
+  return s;
+}
+
 export function normalizeBook(raw) {
   const book = emptyBook();
   for (const f of FIELDS) {
     const v = raw?.[f];
     book[f] = v === null || v === undefined ? '' : String(v).trim();
   }
+  for (const f of DATE_FIELDS) book[f] = normalizeDate(book[f]);
   return book;
 }
 

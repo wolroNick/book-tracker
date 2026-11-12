@@ -13,6 +13,7 @@ const HEADERS = [
   'data_rozpoczecia', 'data_zakonczenia', 'ocena', 'notatki', 'okladka_url',
 ];
 const NUMBER_FIELDS = ['liczba_stron', 'ocena'];
+const DATE_FIELDS = ['data_rozpoczecia', 'data_zakonczenia'];
 
 function doGet() {
   return json_({ ok: true, message: 'Book Tracker API działa. Połącz się z aplikacji.' });
@@ -82,12 +83,27 @@ function readTable_() {
   return { sheet: sheet, headers: headers, rows: values.slice(1) };
 }
 
+function isDate_(value) {
+  return Object.prototype.toString.call(value) === '[object Date]' && !isNaN(value.getTime());
+}
+
 function cellToString_(value) {
   if (value === null || value === undefined || value === '') return '';
-  if (value instanceof Date) {
-    return Utilities.formatDate(value, Session.getScriptTimeZone(), 'yyyy-MM-dd');
+  if (isDate_(value)) {
+    const tz = SpreadsheetApp.getActiveSpreadsheet().getSpreadsheetTimeZone() || Session.getScriptTimeZone();
+    return Utilities.formatDate(value, tz, 'yyyy-MM-dd');
   }
   return String(value).trim();
+}
+
+// Daty zapisane w arkuszu jako tekst (np. 3.03.2026) zamieniamy na RRRR-MM-DD.
+function dateToIso_(value) {
+  const s = cellToString_(value);
+  let m = s.match(/^(\d{4})[-\/.](\d{1,2})[-\/.](\d{1,2})$/);
+  if (m) return m[1] + '-' + ('0' + m[2]).slice(-2) + '-' + ('0' + m[3]).slice(-2);
+  m = s.match(/^(\d{1,2})[.\/-](\d{1,2})[.\/-](\d{4})$/);
+  if (m) return m[3] + '-' + ('0' + m[2]).slice(-2) + '-' + ('0' + m[1]).slice(-2);
+  return s;
 }
 
 function isEmptyRow_(row) {
@@ -105,7 +121,10 @@ function listBooks_() {
   t.rows.forEach(function (row, i) {
     if (isEmptyRow_(row)) return;
     const book = {};
-    HEADERS.forEach(function (h) { book[h] = cellToString_(row[t.headers.indexOf(h)]); });
+    HEADERS.forEach(function (h) {
+      const cell = row[t.headers.indexOf(h)];
+      book[h] = DATE_FIELDS.indexOf(h) !== -1 ? dateToIso_(cell) : cellToString_(cell);
+    });
     if (!book.id) {
       // Uzupełnij brakujące id bezpośrednio w arkuszu.
       book.id = newId_();
