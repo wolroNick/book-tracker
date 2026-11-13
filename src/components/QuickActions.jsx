@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import Modal from './Modal.jsx';
 import BookCover from './BookCover.jsx';
+import { CheckDraw } from './Icons.jsx';
 import { useI18n } from '../i18n/index.jsx';
 import { today } from '../lib/books.js';
 
@@ -116,7 +117,10 @@ export default function QuickActions({ book, onSave, onEdit, onClose, canReread 
       {step === 'rate' && (
         <div className="quick-actions">
           {current.status === 'przeczytane' && current.data_zakonczenia === today() && (
-            <p className="msg msg-ok">{t('quickFinished')}</p>
+            <div className="finished">
+              <CheckDraw />
+              <p className="serif finished-text">{t('quickFinished')}</p>
+            </div>
           )}
           <p>{t('quickRatePrompt')}</p>
           <div className="rating-picker">

@@ -4,7 +4,7 @@ export default {
   settings: 'Settings',
   refresh: 'Refresh from sheet',
   syncing: 'Syncing…',
-  bookCount: '{n} books',
+  bookCount: { one: '{n} book', other: '{n} books' },
   searchPlaceholder: 'Search by title, author, ISBN…',
 
   'status.all': 'All',
@@ -184,4 +184,10 @@ export default {
   rereadYes: 'Yes, read again',
   rereadInfo: 'This is a re-read of this book – it has its own dates, rating, format and notes.',
   statRereads: 'including re-reads: {n}',
+
+  filters: 'Filters',
+  clearFilters: 'Clear',
+  showResults: { one: 'Show {n} book', other: 'Show {n} books' },
+  nowReadingTitle: 'Now reading',
+  nowSince: 'since {date} · day {n}',
 };

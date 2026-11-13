@@ -35,7 +35,7 @@ export function ColumnChart({ data, format, caption }) {
           >
             <span className="column-plot">
               {i === maxIndex && <span className="column-cap">{d.value}</span>}
-              {d.value > 0 && <span className="column-bar" style={{ height: `${(d.value / max) * 100}%` }} />}
+              {d.value > 0 && <span className="column-bar" style={{ height: `${(d.value / max) * 100}%`, '--i': i }} />}
             </span>
             <span className="column-label">{d.label}</span>
           </button>

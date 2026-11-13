@@ -3,7 +3,9 @@ import { useI18n } from '../i18n/index.jsx';
 import { availableYears, computeStats, goalProgress } from '../lib/stats.js';
 import { ColumnChart, BarList } from './Charts.jsx';
 import BookCover from './BookCover.jsx';
-import { FORMS, FORM_ICONS } from '../lib/books.js';
+import CountUp from './CountUp.jsx';
+import { FormIcon } from './Icons.jsx';
+import { FORMS } from '../lib/books.js';
 
 function StatTile({ label, value, sub }) {
   return (
@@ -60,13 +62,13 @@ function GoalCard({ year, goal, count, onSave, synced }) {
   if (count >= goal) pace = t('goalDone');
 
   return (
-    <section className="card">
+    <section className="card goal-card">
       <div className="card-head">
         <h3>{t('goalTitle', { year })}</h3>
         <button type="button" className="link-btn" onClick={() => { setValue(goal); setEditing(true); }}>{t('edit')}</button>
       </div>
       <p className="goal-numbers">
-        <strong>{count}</strong> {t('goalOf', { goal })} <span className="muted">({pct}%)</span>
+        <strong className="serif"><CountUp value={count} format={(v) => Math.round(v)} /></strong> {t('goalOf', { goal })} <span className="goal-pct">({pct}%)</span>
       </p>
       <div className="meter" role="progressbar" aria-valuemin={0} aria-valuemax={goal} aria-valuenow={count}>
         <span className="meter-fill" style={{ width: `${progress.pct}%` }} />
@@ -142,7 +144,7 @@ export default function StatsView({ books, goals, setGoal, goalsSynced, onOpen }
             className={`tab tab-small ${forma === f ? 'active' : ''}`}
             onClick={() => setForma(f)}
           >
-            {f ? `${FORM_ICONS[f]} ${t(`form.${f}`)}` : t('allForms')}
+            {f ? <><FormIcon forma={f} /> {t(`form.${f}`)}</> : t('allForms')}
           </button>
         ))}
       </div>
@@ -159,10 +161,10 @@ export default function StatsView({ books, goals, setGoal, goalsSynced, onOpen }
       )}
 
       <div className="stat-grid">
-        <StatTile label={t('statBooks')} value={nf(stats.count)} sub={stats.rereads ? t('statRereads', { n: stats.rereads }) : null} />
-        <StatTile label={t('statPages')} value={nf(stats.pages)} sub={stats.avgPages ? t('statAvgPages', { n: nf(stats.avgPages) }) : null} />
-        <StatTile label={t('statAvgRating')} value={stats.avgRating === null ? '–' : `${nf(stats.avgRating, 1)}/10`} />
-        <StatTile label={t('statAvgDays')} value={stats.avgDays === null ? '–' : t('nDays', { n: nf(stats.avgDays) })} />
+        <StatTile label={t('statBooks')} value={<CountUp value={stats.count} format={(v) => nf(Math.round(v))} />} sub={stats.rereads ? t('statRereads', { n: stats.rereads }) : null} />
+        <StatTile label={t('statPages')} value={<CountUp value={stats.pages} format={(v) => nf(Math.round(v))} />} sub={stats.avgPages ? t('statAvgPages', { n: nf(stats.avgPages) }) : null} />
+        <StatTile label={t('statAvgRating')} value={<CountUp value={stats.avgRating} format={(v) => `${nf(v, 1)}/10`} />} />
+        <StatTile label={t('statAvgDays')} value={<CountUp value={stats.avgDays} format={(v, end) => `${nf(Math.round(v))} ${t('nDays', { n: Math.round(end) }).split(' ').pop()}`} />} />
       </div>
 
       <section className="card">
@@ -190,7 +192,7 @@ export default function StatsView({ books, goals, setGoal, goalsSynced, onOpen }
           <h3>{t('chartForms')}</h3>
           <BarList
             data={stats.forms.map((f) => ({
-              label: f.key ? `${FORM_ICONS[f.key]} ${t(`form.${f.key}`)}` : t('noForm'),
+              label: f.key ? t(`form.${f.key}`) : t('noForm'),
               value: f.value,
               note: `${Math.round((f.value / formTotal) * 100)}%`,
             }))}

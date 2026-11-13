@@ -4,14 +4,15 @@ import { useBooks } from './hooks/useBooks.js';
 import { useGoals } from './hooks/useGoals.js';
 import { load, save } from './lib/storage.js';
 import { STATUSES } from './lib/books.js';
-import Toolbar from './components/Toolbar.jsx';
-import { BookGrid, BookList } from './components/BookViews.jsx';
+import Toolbar, { FiltersSheet, activeFilterCount } from './components/Toolbar.jsx';
+import { BookGrid, BookList, SkeletonGrid } from './components/BookViews.jsx';
+import NowReading from './components/NowReading.jsx';
 import BookForm from './components/BookForm.jsx';
 import SettingsDialog from './components/SettingsDialog.jsx';
 import FillCoversDialog from './components/FillCoversDialog.jsx';
 import StatsView from './components/StatsView.jsx';
 import QuickActions from './components/QuickActions.jsx';
-import { ImageIcon, PlusIcon, RefreshIcon, SettingsIcon } from './components/Icons.jsx';
+import { BooksIcon, ChartIcon, GridIcon, ImageIcon, ListIcon, PlusIcon, RefreshIcon, SettingsIcon } from './components/Icons.jsx';
 
 const DEFAULT_FILTERS = { query: '', status: 'all', genre: '', forma: '', minRating: 0, sort: 'added', desc: true };
 
@@ -43,6 +44,7 @@ export default function App() {
   const [editing, setEditing] = useState(null); // null | {} (nowa) | książka
   const [showSettings, setShowSettings] = useState(!configured);
   const [showFill, setShowFill] = useState(false);
+  const [showFilters, setShowFilters] = useState(false);
   const [quick, setQuick] = useState(null);
   const [quickTipSeen, setQuickTipSeen] = useState(() => load('bt.quickTip', false));
   const openQuick = (b) => {
@@ -84,6 +86,11 @@ export default function App() {
 
   const missingCovers = useMemo(() => books.filter((b) => !b.okladka_url), [books]);
   const missingForm = useMemo(() => books.filter((b) => !b.forma), [books]);
+  const readingNow = useMemo(() => books.filter((b) => b.status === 'czytam'), [books]);
+  // Banner „Teraz czytam” tylko w widoku bez filtrów i wyszukiwania.
+  const showNowReading = filters.status === 'all' && !filters.query.trim() && !activeFilterCount(filters);
+  // Zmiana filtrów lub widoku odtwarza animację pojawiania się kart.
+  const listKey = `${view}|${filters.status}|${filters.genre}|${filters.forma}|${filters.minRating}|${filters.sort}|${filters.desc}`;
 
   // Jednorazowe ustawienie formy „papier” dla wszystkich książek bez formy.
   const setPaperForAll = async () => {
@@ -131,7 +138,7 @@ export default function App() {
   return (
     <div className="app">
       <header className="app-header">
-        <h1>📚 {t('appName')}</h1>
+        <h1 className="serif">{t('appName')}</h1>
         <div className="header-actions">
           {configured && (
             <button
@@ -157,7 +164,7 @@ export default function App() {
         </div>
       </header>
 
-      <nav className="main-tabs" role="tablist">
+      <nav className="main-tabs desktop-only" role="tablist">
         {['books', 'stats'].map((v) => (
           <button
             key={v}
@@ -194,14 +201,38 @@ export default function App() {
         <Toolbar
           filters={filters}
           setFilters={setFilters}
-          genres={genres}
           counts={counts}
-          view={view}
-          setView={setView}
+          onOpenFilters={() => setShowFilters(true)}
         />
 
+        {showNowReading && <NowReading books={readingNow} onOpen={setEditing} onQuick={openQuick} />}
+
         <div className="list-info">
-          <span>{t('bookCount', { n: visible.length })}</span>
+          <span className="list-count">{t('bookCount', { n: visible.length })}</span>
+          <div className="view-toggle" role="group">
+            <button
+              type="button"
+              className={`icon-btn ${view === 'grid' ? 'active' : ''}`}
+              onClick={() => setView('grid')}
+              title={t('viewGrid')}
+              aria-label={t('viewGrid')}
+              aria-pressed={view === 'grid'}
+            >
+              <GridIcon />
+            </button>
+            <button
+              type="button"
+              className={`icon-btn ${view === 'list' ? 'active' : ''}`}
+              onClick={() => setView('list')}
+              title={t('viewList')}
+              aria-label={t('viewList')}
+              aria-pressed={view === 'list'}
+            >
+              <ListIcon />
+            </button>
+          </div>
+        </div>
+        <div className="list-actions">
           {configured && missingCovers.length > 0 && (
             <button type="button" className="btn btn-small" onClick={() => setShowFill(true)}>
               <ImageIcon /> {t('fillCovers', { n: missingCovers.length })}
@@ -209,30 +240,49 @@ export default function App() {
           )}
           {configured && !scriptOutdated && missingForm.length > 0 && (
             <button type="button" className="btn btn-small" onClick={setPaperForAll} disabled={bulkBusy}>
-              {bulkBusy ? t('saving') : <>📖 {t('setPaper', { n: missingForm.length })}</>}
+              {bulkBusy ? t('saving') : t('setPaper', { n: missingForm.length })}
             </button>
           )}
         </div>
 
         {!quickTipSeen && books.length > 0 && <p className="hint quick-tip">💡 {t('quickTip')}</p>}
 
-        {books.length === 0 && !syncing ? (
+        {books.length === 0 && syncing ? (
+          <SkeletonGrid />
+        ) : books.length === 0 ? (
           <p className="empty">{t('emptyLibrary')}</p>
         ) : visible.length === 0 ? (
           <p className="empty">{t('noResults')}</p>
         ) : view === 'grid' ? (
-          <BookGrid books={visible} onOpen={setEditing} onQuick={openQuick} />
+          <BookGrid key={listKey} books={visible} onOpen={setEditing} onQuick={openQuick} />
         ) : (
-          <BookList books={visible} onOpen={setEditing} onQuick={openQuick} />
+          <BookList key={listKey} books={visible} onOpen={setEditing} onQuick={openQuick} />
         )}
         </>
         )}
       </main>
 
+      <nav className="bottom-nav mobile-only" aria-label={t('appName')}>
+        <button type="button" className={tab === 'books' ? 'active' : ''} onClick={() => setTab('books')} aria-current={tab === 'books' ? 'page' : undefined}>
+          <BooksIcon /> {t('tabBooks')}
+        </button>
+        <button
+          type="button"
+          className="nav-add press"
+          onClick={() => (configured ? setEditing({}) : setShowSettings(true))}
+          aria-label={t('add')}
+        >
+          <PlusIcon />
+        </button>
+        <button type="button" className={tab === 'stats' ? 'active' : ''} onClick={() => setTab('stats')} aria-current={tab === 'stats' ? 'page' : undefined}>
+          <ChartIcon /> {t('tabStats')}
+        </button>
+      </nav>
+
       {tab === 'books' && (
       <button
         type="button"
-        className="fab"
+        className="fab desktop-only"
         onClick={() => (configured ? setEditing({}) : setShowSettings(true))}
         aria-label={t('add')}
         title={t('add')}
@@ -263,6 +313,16 @@ export default function App() {
             setEditing(b);
           }}
           onClose={() => setQuick(null)}
+        />
+      )}
+
+      {showFilters && (
+        <FiltersSheet
+          filters={filters}
+          setFilters={setFilters}
+          genres={genres}
+          resultCount={visible.length}
+          onClose={() => setShowFilters(false)}
         />
       )}
 

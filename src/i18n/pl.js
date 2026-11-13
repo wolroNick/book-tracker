@@ -4,7 +4,7 @@ export default {
   settings: 'Ustawienia',
   refresh: 'Odśwież z arkusza',
   syncing: 'Synchronizacja…',
-  bookCount: '{n} książek',
+  bookCount: { one: '{n} książka', few: '{n} książki', many: '{n} książek', other: '{n} książki' },
   searchPlaceholder: 'Szukaj po tytule, autorze, ISBN…',
 
   'status.all': 'Wszystkie',
@@ -194,4 +194,11 @@ export default {
   rereadYes: 'Tak, czytam ponownie',
   rereadInfo: 'To ponowne czytanie tej książki – ma własne daty, ocenę, formę i notatki.',
   statRereads: 'w tym ponowne czytania: {n}',
+
+  // Nowy wygląd
+  filters: 'Filtry',
+  clearFilters: 'Wyczyść',
+  showResults: { one: 'Pokaż {n} książkę', few: 'Pokaż {n} książki', many: 'Pokaż {n} książek', other: 'Pokaż {n} książki' },
+  nowReadingTitle: 'Teraz czytam',
+  nowSince: 'od {date} · {n}. dzień',
 };
