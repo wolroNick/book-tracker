@@ -12,6 +12,9 @@ Dane są przechowywane w Twoim arkuszu Google, a aplikację można zainstalować
 - przycisk **„Poszukaj na Lubimyczytać”**, gdy okładki brak,
 - **„Uzupełnij brakujące okładki”** dla wszystkich książek naraz,
 - ocena 1–10, data rozpoczęcia i zakończenia, gatunek, liczba stron, notatki,
+- **szybkie akcje**: przytrzymaj okładkę (na komputerze prawy przycisk myszy), aby oznaczyć książkę jako zaczętą lub przeczytaną dziś i od razu ją ocenić,
+- **notatki z formatowaniem**: pogrubienie, kursywa, nagłówki, listy i cytaty, z podglądem,
+- **automatyczna kopia zapasowa** arkusza co 2 tygodnie,
 - **forma**: papier 📖, e-book 📱 lub audiobook 🎧 – z ikonką na okładce, filtrem i statystykami,
 - filtrowanie (status, gatunek, ocena), sortowanie i wyszukiwarka,
 - widok siatki lub listy, interfejs po polsku lub angielsku,
@@ -72,6 +75,23 @@ Książki powinny być na **pierwszej zakładce** arkusza (albo ustaw właściwo
 2. Wklej URL skryptu i klucz `API_KEY`, kliknij **Sprawdź połączenie**, potem **Zapisz**.
 
 Adres i klucz są zapisywane tylko na danym urządzeniu – na telefonie i komputerze trzeba je wpisać osobno.
+
+### Kopie zapasowe
+
+Skrypt może co 2 tygodnie robić kopię arkusza (same dane, bez skryptu) w podfolderze
+**„Kopie zapasowe – książki”** obok oryginału. Przechowywane są 4 ostatnie kopie, starsze trafiają do kosza Dysku Google (30 dni na odzyskanie).
+
+Włączenie (jednorazowo, po aktualizacji skryptu):
+
+1. W edytorze Apps Script, na górnym pasku, rozwiń listę funkcji (obok przycisków „Uruchom” i „Debuguj”) i wybierz **`wlaczKopieZapasowe`**.
+2. Kliknij **Uruchom**.
+3. Google poprosi o nowe uprawnienia (dostęp do Dysku i uruchamianie skryptu według harmonogramu): wybierz swoje konto → **Zaawansowane → Przejdź do projektu (niebezpieczne) → Zezwól**.
+4. Gotowe – w folderze z arkuszem pojawi się podfolder z pierwszą kopią.
+
+Stan kopii i przycisk **„Zrób kopię teraz”** znajdziesz w ustawieniach aplikacji (⚙️).
+Aby wyłączyć automatyczne kopie, uruchom w ten sam sposób funkcję `wylaczKopieZapasowe`.
+
+**Przywracanie:** otwórz wybraną kopię, zaznacz dane na zakładce z książkami i skopiuj je do oryginalnego arkusza (albo poproś o pomoc).
 
 ### Cel roczny
 

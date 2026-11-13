@@ -6,10 +6,14 @@
  * Właściwości skryptu (Ustawienia projektu → Właściwości skryptu):
  *   API_KEY    – tajny klucz, który wpisujesz też w ustawieniach aplikacji (wymagane)
  *   SHEET_NAME – nazwa zakładki z książkami (opcjonalne, domyślnie pierwsza zakładka)
+ *
+ * Kopie zapasowe: uruchom raz ręcznie funkcję wlaczKopieZapasowe (lista funkcji
+ * na górnym pasku edytora → Uruchom). Od tej pory co 2 tygodnie powstaje kopia
+ * arkusza w podfolderze „Kopie zapasowe – książki” obok oryginału.
  */
 
 // Numer wersji skryptu – aplikacja pokazuje go po kliknięciu „Sprawdź połączenie”.
-const SCRIPT_VERSION = 3;
+const SCRIPT_VERSION = 4;
 
 const HEADERS = [
   'id', 'tytul', 'autor', 'isbn', 'gatunek', 'liczba_stron', 'status',
@@ -58,6 +62,11 @@ function handle_(req) {
           return json_({ ok: true });
         case 'getConfig':
           return json_({ ok: true, config: getConfig_() });
+        case 'backupInfo':
+          return json_({ ok: true, backup: backupInfo_() });
+        case 'backupNow':
+          zrobKopieZapasowa();
+          return json_({ ok: true, backup: backupInfo_() });
         case 'setConfig':
           return json_({ ok: true, config: setConfig_(req.config || {}) });
         default:
@@ -225,6 +234,79 @@ function setConfig_(patch) {
   Object.keys(patch).forEach(function (k) { config[k] = patch[k]; });
   PropertiesService.getScriptProperties().setProperty('APP_CONFIG', JSON.stringify(config));
   return config;
+}
+
+// ---------------------------------------------------------------------------
+// Kopie zapasowe
+
+const BACKUP_FOLDER = 'Kopie zapasowe – książki';
+const BACKUP_KEEP = 4; // ile ostatnich kopii przechowywać
+const BACKUP_EVERY_WEEKS = 2;
+
+/** Uruchom raz ręcznie w edytorze: włącza automatyczne kopie co 2 tygodnie i robi pierwszą kopię. */
+function wlaczKopieZapasowe() {
+  wylaczKopieZapasowe();
+  ScriptApp.newTrigger('zrobKopieZapasowa')
+    .timeBased()
+    .everyWeeks(BACKUP_EVERY_WEEKS)
+    .onWeekDay(ScriptApp.WeekDay.MONDAY)
+    .atHour(3)
+    .create();
+  zrobKopieZapasowa();
+}
+
+/** Wyłącza automatyczne kopie (istniejące kopie zostają). */
+function wylaczKopieZapasowe() {
+  ScriptApp.getProjectTriggers().forEach(function (t) {
+    if (t.getHandlerFunction() === 'zrobKopieZapasowa') ScriptApp.deleteTrigger(t);
+  });
+}
+
+function backupFolder_() {
+  const ss = SpreadsheetApp.getActiveSpreadsheet();
+  const parents = DriveApp.getFileById(ss.getId()).getParents();
+  const parent = parents.hasNext() ? parents.next() : DriveApp.getRootFolder();
+  const existing = parent.getFoldersByName(BACKUP_FOLDER);
+  return existing.hasNext() ? existing.next() : parent.createFolder(BACKUP_FOLDER);
+}
+
+/** Tworzy kopię wszystkich zakładek (same dane i formatowanie, bez skryptu) i usuwa najstarsze kopie. */
+function zrobKopieZapasowa() {
+  const ss = SpreadsheetApp.getActiveSpreadsheet();
+  const tz = ss.getSpreadsheetTimeZone() || Session.getScriptTimeZone();
+  const stamp = Utilities.formatDate(new Date(), tz, 'yyyy-MM-dd HH:mm');
+  const copy = SpreadsheetApp.create(ss.getName() + ' – kopia ' + stamp);
+
+  const blank = copy.getSheets()[0];
+  ss.getSheets().forEach(function (sheet) {
+    const copied = sheet.copyTo(copy);
+    copied.setName(sheet.getName());
+  });
+  copy.deleteSheet(blank);
+
+  const folder = backupFolder_();
+  DriveApp.getFileById(copy.getId()).moveTo(folder);
+
+  // Zostaw tylko BACKUP_KEEP najnowszych kopii; starsze trafiają do kosza (30 dni na odzyskanie).
+  const files = [];
+  const it = folder.getFilesByType(MimeType.GOOGLE_SHEETS);
+  while (it.hasNext()) files.push(it.next());
+  files.sort(function (a, b) { return b.getDateCreated() - a.getDateCreated(); });
+  files.slice(BACKUP_KEEP).forEach(function (f) { f.setTrashed(true); });
+
+  PropertiesService.getScriptProperties().setProperty('LAST_BACKUP', stamp);
+}
+
+function backupInfo_() {
+  const enabled = ScriptApp.getProjectTriggers().some(function (t) {
+    return t.getHandlerFunction() === 'zrobKopieZapasowa';
+  });
+  return {
+    enabled: enabled,
+    last: PropertiesService.getScriptProperties().getProperty('LAST_BACKUP') || '',
+    everyWeeks: BACKUP_EVERY_WEEKS,
+    keep: BACKUP_KEEP,
+  };
 }
 
 function json_(obj) {

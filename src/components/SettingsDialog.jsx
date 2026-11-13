@@ -1,9 +1,73 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Modal from './Modal.jsx';
 import { useI18n } from '../i18n/index.jsx';
 import { sheetApi } from '../lib/sheetApi.js';
 
 const GUIDE_URL = 'https://github.com/wolroNick/book-tracker#readme';
+const BACKUP_GUIDE_URL = 'https://github.com/wolroNick/book-tracker#kopie-zapasowe';
+
+// Stan kopii zapasowych w arkuszu: data ostatniej kopii i przycisk „Zrób kopię teraz”.
+function BackupSection({ settings }) {
+  const { t, errorText } = useI18n();
+  const [info, setInfo] = useState(null);
+  const [state, setState] = useState('loading'); // loading | idle | running | error | outdated
+  const [msg, setMsg] = useState('');
+
+  useEffect(() => {
+    if (!settings.url || !settings.key) return;
+    sheetApi
+      .backupInfo(settings)
+      .then((b) => { setInfo(b); setState('idle'); })
+      .catch((err) => {
+        const outdated = /Nieznana akcja/.test(err.message);
+        setState(outdated ? 'outdated' : 'error');
+        setMsg(outdated ? t('backupOutdated') : errorText(err));
+      });
+  }, [settings, t, errorText]);
+
+  const runNow = async () => {
+    setState('running');
+    setMsg('');
+    try {
+      setInfo(await sheetApi.backupNow(settings));
+      setState('idle');
+      setMsg(t('backupDone'));
+    } catch (err) {
+      setState('error');
+      setMsg(`${errorText(err)} ${t('backupAuthHint')}`);
+    }
+  };
+
+  if (!settings.url || !settings.key) return null;
+
+  return (
+    <section className="settings-section">
+      <h3>{t('backupTitle')}</h3>
+      {state === 'loading' && <p className="hint">{t('testing')}</p>}
+      {info && (
+        <>
+          <p>
+            {info.enabled ? t('backupEnabled', { weeks: info.everyWeeks, keep: info.keep }) : t('backupDisabled')}
+          </p>
+          <p className="hint">{t('backupLast', { date: info.last || t('backupNever') })}</p>
+          {!info.enabled && (
+            <p className="hint">
+              <a href={BACKUP_GUIDE_URL} target="_blank" rel="noopener noreferrer">{t('backupHowTo')} ↗</a>
+            </p>
+          )}
+        </>
+      )}
+      {state !== 'outdated' && state !== 'loading' && (
+        <div className="inline-form">
+          <button type="button" className="btn" onClick={runNow} disabled={state === 'running'}>
+            {state === 'running' ? t('backupRunning') : t('backupNow')}
+          </button>
+        </div>
+      )}
+      {msg && <p className={`msg ${state === 'error' ? 'msg-error' : state === 'outdated' ? 'msg-info' : 'msg-ok'}`}>{msg}</p>}
+    </section>
+  );
+}
 
 export default function SettingsDialog({ settings, onSave, onClose, welcome }) {
   const { t, lang, setLang, errorText } = useI18n();
@@ -73,6 +137,8 @@ export default function SettingsDialog({ settings, onSave, onClose, welcome }) {
         </button>
       </div>
       {test.msg && <p className={`msg ${test.state === 'ok' ? 'msg-ok' : test.state === 'warn' ? 'msg-info' : 'msg-error'}`}>{test.msg}</p>}
+
+      <BackupSection settings={settings} />
 
       <label className="field">
         <span>{t('language')}</span>

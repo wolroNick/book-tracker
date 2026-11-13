@@ -314,3 +314,33 @@ button { -webkit-tap-highlight-color: transparent; }
 .bar-note { font-weight: normal; color: var(--muted); }
 .tab-small { padding: 5px 12px; font-size: 0.88rem; }
 .list-info .btn { white-space: normal; text-align: left; max-width: 100%; }
+
+.settings-section { display: flex; flex-direction: column; gap: 8px; padding-top: 12px; border-top: 1px solid var(--border); }
+.settings-section h3 { margin: 0; font-size: 1rem; }
+
+/* Szybkie akcje */
+.grid-card, .list-row { -webkit-touch-callout: none; user-select: none; -webkit-user-select: none; }
+.grid-card img, .list-row img { pointer-events: none; }
+.quick-head { display: flex; gap: 12px; align-items: center; }
+.quick-cover { width: 56px; flex: none; }
+.quick-actions { display: flex; flex-direction: column; gap: 8px; }
+.quick-btn { justify-content: flex-start; min-height: 48px; font-size: 1rem; }
+.quick-tip { margin: -4px 0 10px; }
+
+/* Notatki */
+.notes-editor { display: flex; flex-direction: column; gap: 6px; }
+.notes-bar { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; justify-content: space-between; }
+.fmt-tools { display: flex; gap: 4px; }
+.fmt-btn { width: 36px; height: 34px; border: 1px solid var(--border); border-radius: 6px; background: var(--surface); cursor: pointer; font-weight: 600; }
+.fmt-btn:hover { border-color: var(--accent); }
+.fmt-bold { font-weight: 800; }
+.fmt-italic { font-style: italic; font-family: Georgia, serif; }
+.notes-editor textarea { min-height: 180px; line-height: 1.5; }
+.notes-preview { padding: 10px 12px; border: 1px solid var(--border); border-radius: 8px; line-height: 1.55; cursor: text; min-height: 60px; overflow-wrap: anywhere; }
+.notes-preview > :first-child { margin-top: 0; }
+.notes-preview > :last-child { margin-bottom: 0; }
+.notes-preview h4 { margin: 12px 0 4px; font-size: 1rem; }
+.notes-preview p { margin: 0 0 8px; }
+.notes-preview ul, .notes-preview ol { margin: 0 0 8px; padding-left: 22px; }
+.notes-preview blockquote { margin: 0 0 8px; padding: 4px 12px; border-left: 3px solid var(--accent); color: var(--muted); font-style: italic; }
+.notes-empty { padding: 14px; border: 1px dashed var(--border); border-radius: 8px; background: none; color: var(--muted); cursor: pointer; text-align: left; }

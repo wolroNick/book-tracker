@@ -2,6 +2,7 @@ import { useState } from 'react';
 import Modal from './Modal.jsx';
 import BookCover from './BookCover.jsx';
 import { ExternalIcon } from './Icons.jsx';
+import NotesEditor from './NotesEditor.jsx';
 import { useI18n } from '../i18n/index.jsx';
 import { FORMS, FORM_ICONS, STATUSES, emptyBook, today } from '../lib/books.js';
 import { findCover, lubimyczytacUrl, searchBooks } from '../lib/bookSearch.js';
@@ -315,10 +316,10 @@ export default function BookForm({ book, genres, onSave, onDelete, onClose }) {
             <span>{t('field.isbn')}</span>
             <input value={form.isbn} inputMode="numeric" onChange={(e) => set('isbn', e.target.value.trim())} />
           </label>
-          <label className="field field-full">
+          <div className="field field-full">
             <span>{t('field.notatki')}</span>
-            <textarea rows={4} value={form.notatki} onChange={(e) => set('notatki', e.target.value)} />
-          </label>
+            <NotesEditor value={form.notatki} onChange={(v) => set('notatki', v)} />
+          </div>
         </div>
       </form>
 

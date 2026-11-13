@@ -10,6 +10,7 @@ import BookForm from './components/BookForm.jsx';
 import SettingsDialog from './components/SettingsDialog.jsx';
 import FillCoversDialog from './components/FillCoversDialog.jsx';
 import StatsView from './components/StatsView.jsx';
+import QuickActions from './components/QuickActions.jsx';
 import { ImageIcon, PlusIcon, RefreshIcon, SettingsIcon } from './components/Icons.jsx';
 
 const DEFAULT_FILTERS = { query: '', status: 'all', genre: '', forma: '', minRating: 0, sort: 'added', desc: true };
@@ -42,6 +43,15 @@ export default function App() {
   const [editing, setEditing] = useState(null); // null | {} (nowa) | książka
   const [showSettings, setShowSettings] = useState(!configured);
   const [showFill, setShowFill] = useState(false);
+  const [quick, setQuick] = useState(null);
+  const [quickTipSeen, setQuickTipSeen] = useState(() => load('bt.quickTip', false));
+  const openQuick = (b) => {
+    setQuick(b);
+    if (!quickTipSeen) {
+      setQuickTipSeen(true);
+      save('bt.quickTip', true);
+    }
+  };
 
   const setSettings = (s) => {
     setSettingsState(s);
@@ -99,7 +109,7 @@ export default function App() {
         if (filters.genre && b.gatunek !== filters.genre) return false;
         if (filters.forma === 'none' ? b.forma : filters.forma && b.forma !== filters.forma) return false;
         if (filters.minRating && !(Number(b.ocena) >= filters.minRating)) return false;
-        if (q && !fold(`${b.tytul} ${b.autor} ${b.isbn} ${b.gatunek}`).includes(q)) return false;
+        if (q && !fold(`${b.tytul} ${b.autor} ${b.isbn} ${b.gatunek} ${b.notatki}`).includes(q)) return false;
         return true;
       });
 
@@ -201,14 +211,16 @@ export default function App() {
           )}
         </div>
 
+        {!quickTipSeen && books.length > 0 && <p className="hint quick-tip">💡 {t('quickTip')}</p>}
+
         {books.length === 0 && !syncing ? (
           <p className="empty">{t('emptyLibrary')}</p>
         ) : visible.length === 0 ? (
           <p className="empty">{t('noResults')}</p>
         ) : view === 'grid' ? (
-          <BookGrid books={visible} onOpen={setEditing} />
+          <BookGrid books={visible} onOpen={setEditing} onQuick={openQuick} />
         ) : (
-          <BookList books={visible} onOpen={setEditing} />
+          <BookList books={visible} onOpen={setEditing} onQuick={openQuick} />
         )}
         </>
         )}
@@ -234,6 +246,19 @@ export default function App() {
           onSave={saveBook}
           onDelete={deleteBook}
           onClose={() => setEditing(null)}
+        />
+      )}
+
+      {quick && (
+        <QuickActions
+          key={quick.id}
+          book={quick}
+          onSave={saveBook}
+          onEdit={(b) => {
+            setQuick(null);
+            setEditing(b);
+          }}
+          onClose={() => setQuick(null)}
         />
       )}
 

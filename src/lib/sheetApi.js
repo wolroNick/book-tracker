@@ -30,6 +30,8 @@ export const sheetApi = {
   save: async (s, book) => (await call(s, 'save', { book })).book,
   saveMany: async (s, books) => (await call(s, 'saveMany', { books })).books,
   remove: (s, id) => call(s, 'delete', { id }),
+  backupInfo: async (s) => (await call(s, 'backupInfo')).backup,
+  backupNow: async (s) => (await call(s, 'backupNow')).backup,
   getConfig: async (s) => (await call(s, 'getConfig')).config,
   setConfig: async (s, config) => (await call(s, 'setConfig', { config })).config,
 };

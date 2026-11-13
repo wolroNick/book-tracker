@@ -149,4 +149,39 @@ export default {
   scriptVersion: '(wersja skryptu: {v})',
   scriptOld: 'Uwaga: to starsza wersja skryptu – zaktualizuj wdrożenie (Wersja: „Nowa wersja”).',
   chartForms: 'Forma czytania',
+
+  // Kopie zapasowe
+  backupTitle: 'Kopia zapasowa arkusza',
+  backupEnabled: 'Automatyczne kopie są włączone: co {weeks} tygodnie, przechowywane są {keep} ostatnie.',
+  backupDisabled: 'Automatyczne kopie są wyłączone.',
+  backupLast: 'Ostatnia kopia: {date}',
+  backupNever: 'jeszcze nie było',
+  backupHowTo: 'Jak włączyć automatyczne kopie',
+  backupNow: 'Zrób kopię teraz',
+  backupRunning: 'Tworzę kopię…',
+  backupDone: 'Kopia gotowa – znajdziesz ją w folderze „Kopie zapasowe – książki” obok arkusza.',
+  backupOutdated: 'Kopie zapasowe wymagają nowej wersji skryptu w arkuszu (zaktualizuj wdrożenie).',
+  backupAuthHint: 'Jeśli to błąd uprawnień, uruchom raz funkcję wlaczKopieZapasowe w edytorze Apps Script (instrukcja w README).',
+
+  // Szybkie akcje
+  quickTip: 'Wskazówka: przytrzymaj okładkę (na komputerze kliknij prawym przyciskiem), aby szybko zmienić status książki.',
+  quickStart: 'Zaczynam czytać (od dziś)',
+  quickFinish: 'Przeczytana dziś',
+  quickRate: 'Zmień ocenę',
+  quickFinished: 'Oznaczono jako przeczytaną dziś.',
+  quickRatePrompt: 'Jak oceniasz tę książkę?',
+  skip: 'Pomiń',
+
+  // Notatki
+  notesEdit: 'Edycja',
+  notesPreview: 'Podgląd',
+  notesPlaceholder: 'Twoje wrażenia, recenzja…\n\n**pogrubienie**, *kursywa*, # nagłówek, - lista, > cytat',
+  notesEmpty: 'Brak notatek – kliknij, aby dodać.',
+  notesSample: 'tekst',
+  fmtBold: 'Pogrubienie',
+  fmtItalic: 'Kursywa',
+  fmtHeading: 'Nagłówek',
+  fmtList: 'Lista punktowana',
+  fmtNumbered: 'Lista numerowana',
+  fmtQuote: 'Cytat',
 };
