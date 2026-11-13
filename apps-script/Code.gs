@@ -13,14 +13,15 @@
  */
 
 // Numer wersji skryptu – aplikacja pokazuje go po kliknięciu „Sprawdź połączenie”.
-const SCRIPT_VERSION = 4;
+const SCRIPT_VERSION = 5;
 
 const HEADERS = [
   'id', 'tytul', 'autor', 'isbn', 'gatunek', 'liczba_stron', 'status',
-  'data_rozpoczecia', 'data_zakonczenia', 'ocena', 'notatki', 'okladka_url', 'forma',
+  'data_rozpoczecia', 'data_zakonczenia', 'ocena', 'notatki', 'okladka_url', 'forma', 'ponowne',
 ];
 // Kolumny dodawane automatycznie na końcu arkusza, jeśli ich brakuje.
-const OPTIONAL_HEADERS = ['forma'];
+// „ponowne” – przy ponownym czytaniu: id pierwszego wpisu tej książki.
+const OPTIONAL_HEADERS = ['forma', 'ponowne'];
 const NUMBER_FIELDS = ['liczba_stron', 'ocena'];
 const DATE_FIELDS = ['data_rozpoczecia', 'data_zakonczenia'];
 

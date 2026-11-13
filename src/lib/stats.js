@@ -98,6 +98,7 @@ export function computeStats(books, year, forma = '') {
 
   return {
     count: inScope.length,
+    rereads: inScope.filter((b) => b.ponowne).length,
     pages: pages.reduce((a, b) => a + b, 0),
     avgRating: avg(ratings),
     avgDays: avg(withDays.map((x) => x.days)),

@@ -159,7 +159,7 @@ export default function StatsView({ books, goals, setGoal, goalsSynced, onOpen }
       )}
 
       <div className="stat-grid">
-        <StatTile label={t('statBooks')} value={nf(stats.count)} />
+        <StatTile label={t('statBooks')} value={nf(stats.count)} sub={stats.rereads ? t('statRereads', { n: stats.rereads }) : null} />
         <StatTile label={t('statPages')} value={nf(stats.pages)} sub={stats.avgPages ? t('statAvgPages', { n: nf(stats.avgPages) }) : null} />
         <StatTile label={t('statAvgRating')} value={stats.avgRating === null ? '–' : `${nf(stats.avgRating, 1)}/10`} />
         <StatTile label={t('statAvgDays')} value={stats.avgDays === null ? '–' : t('nDays', { n: nf(stats.avgDays) })} />

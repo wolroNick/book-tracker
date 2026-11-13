@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import Modal from './Modal.jsx';
 import { useI18n } from '../i18n/index.jsx';
 import { sheetApi } from '../lib/sheetApi.js';
+import { REQUIRED_SCRIPT_VERSION } from '../lib/books.js';
 
 const GUIDE_URL = 'https://github.com/wolroNick/book-tracker#readme';
 const BACKUP_GUIDE_URL = 'https://github.com/wolroNick/book-tracker#kopie-zapasowe';
@@ -81,10 +82,10 @@ export default function SettingsDialog({ settings, onSave, onClose, welcome }) {
     setTest({ state: 'loading', msg: '' });
     try {
       const res = await sheetApi.ping(current);
-      const msg = res.version >= 3
+      const msg = res.version >= REQUIRED_SCRIPT_VERSION
         ? `${t('connectionOk')} ${t('scriptVersion', { v: res.version })}`
         : `${t('connectionOk')} ${t('scriptOld')}`;
-      setTest({ state: res.version >= 3 ? 'ok' : 'warn', msg });
+      setTest({ state: res.version >= REQUIRED_SCRIPT_VERSION ? 'ok' : 'warn', msg });
     } catch (err) {
       setTest({ state: 'error', msg: errorText(err) });
     }

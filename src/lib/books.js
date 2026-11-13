@@ -1,8 +1,11 @@
 // Model książki – nazwy pól odpowiadają nagłówkom kolumn w arkuszu.
 export const FIELDS = [
   'id', 'tytul', 'autor', 'isbn', 'gatunek', 'liczba_stron', 'status',
-  'data_rozpoczecia', 'data_zakonczenia', 'ocena', 'notatki', 'okladka_url', 'forma',
+  'data_rozpoczecia', 'data_zakonczenia', 'ocena', 'notatki', 'okladka_url', 'forma', 'ponowne',
 ];
+
+// Najnowsza wersja skryptu arkusza wymagana przez aplikację.
+export const REQUIRED_SCRIPT_VERSION = 5;
 
 // Wartości statusu dokładnie tak, jak są zapisane w arkuszu.
 export const STATUSES = ['przeczytane', 'czytam', 'do przeczytania'];

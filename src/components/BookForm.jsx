@@ -180,6 +180,8 @@ export default function BookForm({ book, genres, onSave, onDelete, onClose }) {
         </button>
       )}
 
+      {form.ponowne && <p className="msg msg-info">🔁 {t('rereadInfo')}</p>}
+
       <form id="book-form" className="book-form" onSubmit={submit}>
         <div className="form-cover">
           <BookCover

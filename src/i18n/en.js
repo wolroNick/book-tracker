@@ -139,7 +139,7 @@ export default {
   setPaper: 'Set format “paper” for books without one ({n})',
   setPaperConfirm: 'Set format “paper” for all books without a format ({n})? The change will be saved to the sheet. You can fix exceptions manually afterwards.',
   setPaperDone: 'Done – format “paper” set for {n} books.',
-  scriptOutdated: 'The app is connected to an older version of the script that does not save the book format. In Apps Script: Deploy → Manage deployments → ✏️ → Version: “New version” → Deploy. If you created a new deployment instead, paste its new URL in the app settings.',
+  scriptOutdated: 'The app is connected to an older version of the script that does not support new features (format, re-reading). In Apps Script: Deploy → Manage deployments → ✏️ → Version: “New version” → Deploy. If you created a new deployment instead, paste its new URL in the app settings.',
   scriptVersion: '(script version: {v})',
   scriptOld: 'Note: this is an older script version – update the deployment (Version: “New version”).',
   chartForms: 'Reading format',
@@ -175,4 +175,13 @@ export default {
   fmtList: 'Bulleted list',
   fmtNumbered: 'Numbered list',
   fmtQuote: 'Quote',
+
+  'status.reread': '🔁 Re-reads',
+  reread: 'Re-read',
+  quickReread: 'Read again',
+  rereadConfirm: 'Create a new entry for re-reading “{title}”?',
+  rereadHint: 'A copy will be created with status “reading” and today as the start date. The original entry with its dates and rating stays unchanged.',
+  rereadYes: 'Yes, read again',
+  rereadInfo: 'This is a re-read of this book – it has its own dates, rating, format and notes.',
+  statRereads: 'including re-reads: {n}',
 };

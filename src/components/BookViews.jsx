@@ -35,6 +35,7 @@ function StatusChip({ status }) {
 }
 
 export function BookGrid({ books, onOpen, onQuick }) {
+  const { t } = useI18n();
   return (
     <ul className="book-grid">
       {books.map((b) => (
@@ -43,6 +44,7 @@ export function BookGrid({ books, onOpen, onQuick }) {
             <div className="grid-cover-wrap">
               <BookCover book={b} />
               <FormBadge forma={b.forma} />
+              {b.ponowne && <span className="reread-badge" title={t('reread')} aria-label={t('reread')}>🔁</span>}
               <Rating value={b.ocena} />
             </div>
             <span className="grid-title">{b.tytul}</span>
@@ -67,6 +69,7 @@ export function BookList({ books, onOpen, onQuick }) {
               <span className="list-author">{b.autor}</span>
               <div className="list-meta">
                 <StatusChip status={b.status} />
+                {b.ponowne && <span className="status-chip status-reread">🔁 {t('reread')}</span>}
                 {FORM_ICONS[b.forma] && <span>{FORM_ICONS[b.forma]} {t(`form.${b.forma}`)}</span>}
                 {b.gatunek && <span>{b.gatunek}</span>}
                 {b.liczba_stron && <span>{b.liczba_stron} {t('pages')}</span>}

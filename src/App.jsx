@@ -78,6 +78,7 @@ export default function App() {
   const counts = useMemo(() => {
     const c = { all: books.length };
     for (const s of STATUSES) c[s] = books.filter((b) => b.status === s).length;
+    c.reread = books.filter((b) => b.ponowne).length;
     return c;
   }, [books]);
 
@@ -102,10 +103,12 @@ export default function App() {
 
   const visible = useMemo(() => {
     const q = fold(filters.query.trim());
+    // Zapamiętany filtr „ponowne” bez żadnych ponownych czytań = wszystkie.
+    const status = filters.status === 'reread' && !books.some((b) => b.ponowne) ? 'all' : filters.status;
     const list = books
       .map((b, index) => ({ b, index }))
       .filter(({ b }) => {
-        if (filters.status !== 'all' && b.status !== filters.status) return false;
+        if (status === 'reread' ? !b.ponowne : status !== 'all' && b.status !== status) return false;
         if (filters.genre && b.gatunek !== filters.genre) return false;
         if (filters.forma === 'none' ? b.forma : filters.forma && b.forma !== filters.forma) return false;
         if (filters.minRating && !(Number(b.ocena) >= filters.minRating)) return false;
@@ -254,6 +257,7 @@ export default function App() {
           key={quick.id}
           book={quick}
           onSave={saveBook}
+          canReread={!scriptOutdated}
           onEdit={(b) => {
             setQuick(null);
             setEditing(b);

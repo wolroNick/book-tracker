@@ -6,6 +6,7 @@ export function useLongPress(onLongPress, onClick, delay = 500) {
   const timer = useRef(null);
   const fired = useRef(false);
   const start = useRef(null);
+  const firedAt = useRef(0); // kiedy menu otworzyło przytrzymanie (żeby nie otworzyć go drugi raz)
 
   const cancel = () => {
     clearTimeout(timer.current);
@@ -14,12 +15,13 @@ export function useLongPress(onLongPress, onClick, delay = 500) {
 
   return {
     onPointerDown: (e) => {
-      if (e.button !== 0) return;
       fired.current = false;
+      if (e.button !== 0) return;
       start.current = { x: e.clientX, y: e.clientY };
       cancel();
       timer.current = setTimeout(() => {
         fired.current = true;
+        firedAt.current = Date.now();
         if (navigator.vibrate) navigator.vibrate(15);
         onLongPress();
       }, delay);
@@ -33,11 +35,11 @@ export function useLongPress(onLongPress, onClick, delay = 500) {
     onPointerCancel: cancel,
     onContextMenu: (e) => {
       e.preventDefault();
-      if (!fired.current) {
-        cancel();
-        fired.current = true;
-        onLongPress();
-      }
+      cancel();
+      // Na telefonie przytrzymanie wywołuje też contextmenu – menu jest już otwarte.
+      if (Date.now() - firedAt.current < 1000) return;
+      fired.current = true;
+      onLongPress();
     },
     onClick: (e) => {
       if (fired.current) {

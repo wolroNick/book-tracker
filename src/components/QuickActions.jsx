@@ -5,9 +5,9 @@ import { useI18n } from '../i18n/index.jsx';
 import { today } from '../lib/books.js';
 
 // Menu szybkich akcji po przytrzymaniu okładki.
-export default function QuickActions({ book, onSave, onEdit, onClose }) {
+export default function QuickActions({ book, onSave, onEdit, onClose, canReread }) {
   const { t, errorText } = useI18n();
-  const [step, setStep] = useState('menu'); // menu | rate
+  const [step, setStep] = useState('menu'); // menu | rate | reread
   const [current, setCurrent] = useState(book);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState('');
@@ -33,6 +33,28 @@ export default function QuickActions({ book, onSave, onEdit, onClose }) {
 
   const finishToday = async () => {
     if (await save({ status: 'przeczytane', data_zakonczenia: today() })) setStep('rate');
+  };
+
+  // Ponowne czytanie: nowy wpis (kopia) ze statusem „czytam” od dziś; oryginał zostaje bez zmian.
+  const reread = async () => {
+    setBusy(true);
+    setError('');
+    try {
+      await onSave({
+        ...current,
+        id: '',
+        status: 'czytam',
+        data_rozpoczecia: today(),
+        data_zakonczenia: '',
+        ocena: '',
+        notatki: '',
+        ponowne: current.ponowne || current.id,
+      });
+      onClose();
+    } catch (err) {
+      setError(errorText(err));
+      setBusy(false);
+    }
   };
 
   const rate = async (n) => {
@@ -67,8 +89,26 @@ export default function QuickActions({ book, onSave, onEdit, onClose }) {
               ★ {t('quickRate')}
             </button>
           )}
+          {current.status === 'przeczytane' && canReread && (
+            <button type="button" className="btn quick-btn" onClick={() => setStep('reread')} disabled={busy}>
+              🔁 {t('quickReread')}
+            </button>
+          )}
           <button type="button" className="btn btn-ghost quick-btn" onClick={() => onEdit(current)} disabled={busy}>
             ✏️ {t('editBook')}
+          </button>
+        </div>
+      )}
+
+      {step === 'reread' && (
+        <div className="quick-actions">
+          <p>{t('rereadConfirm', { title: current.tytul })}</p>
+          <p className="hint">{t('rereadHint')}</p>
+          <button type="button" className="btn btn-primary quick-btn" onClick={reread} disabled={busy}>
+            🔁 {t('rereadYes')}
+          </button>
+          <button type="button" className="btn btn-ghost" onClick={() => setStep('menu')} disabled={busy}>
+            {t('cancel')}
           </button>
         </div>
       )}

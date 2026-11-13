@@ -29,7 +29,7 @@ export function useBooks(settings) {
     setError(null);
     try {
       const list = await sheetApi.list(settings);
-      setScriptOutdated(list.length > 0 && !('forma' in list[0]));
+      setScriptOutdated(list.length > 0 && !('ponowne' in list[0]));
       setBooks(list.map(normalizeBook));
     } catch (err) {
       setError(err);

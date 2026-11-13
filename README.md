@@ -13,6 +13,7 @@ Dane są przechowywane w Twoim arkuszu Google, a aplikację można zainstalować
 - **„Uzupełnij brakujące okładki”** dla wszystkich książek naraz,
 - ocena 1–10, data rozpoczęcia i zakończenia, gatunek, liczba stron, notatki,
 - **szybkie akcje**: przytrzymaj okładkę (na komputerze prawy przycisk myszy), aby oznaczyć książkę jako zaczętą lub przeczytaną dziś i od razu ją ocenić,
+- **ponowne czytanie** 🔁: przy przeczytanej książce szybka akcja „Czytam ponownie” tworzy nowy wpis z własnymi datami, oceną i formą (liczony osobno w statystykach),
 - **notatki z formatowaniem**: pogrubienie, kursywa, nagłówki, listy i cytaty, z podglądem,
 - **automatyczna kopia zapasowa** arkusza co 2 tygodnie,
 - **forma**: papier 📖, e-book 📱 lub audiobook 🎧 – z ikonką na okładce, filtrem i statystykami,
@@ -31,10 +32,10 @@ Pracuj na **kopii** swojego arkusza (Plik → Utwórz kopię).
 Pierwszy wiersz musi zawierać dokładnie te nagłówki (kolejność dowolna, dodatkowe kolumny są dozwolone i aplikacja ich nie zmienia):
 
 ```
-id  tytul  autor  isbn  gatunek  liczba_stron  status  data_rozpoczecia  data_zakonczenia  ocena  notatki  okladka_url  forma
+id  tytul  autor  isbn  gatunek  liczba_stron  status  data_rozpoczecia  data_zakonczenia  ocena  notatki  okladka_url  forma  ponowne
 ```
 
-Kolumnę `forma` (wartości `papier`, `e-book`, `audiobook`) skrypt doda sam na końcu arkusza, jeśli jej nie ma.
+Kolumny `forma` (wartości `papier`, `e-book`, `audiobook`) i `ponowne` (przy ponownym czytaniu: id pierwszego wpisu tej książki) skrypt doda sam na końcu arkusza, jeśli ich nie ma.
 
 - `status`: `przeczytane`, `czytam` lub `do przeczytania`
 - `ocena`: liczba 1–10

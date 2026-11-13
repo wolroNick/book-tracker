@@ -19,7 +19,7 @@ export default function Toolbar({ filters, setFilters, genres, counts, view, set
       />
 
       <div className="status-tabs" role="tablist">
-        {['all', ...STATUSES].map((s) => (
+        {['all', ...STATUSES, ...(counts.reread ? ['reread'] : [])].map((s) => (
           <button
             key={s}
             type="button"
