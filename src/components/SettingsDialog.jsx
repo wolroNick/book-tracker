@@ -70,7 +70,7 @@ function BackupSection({ settings }) {
   );
 }
 
-export default function SettingsDialog({ settings, onSave, onClose, welcome }) {
+export default function SettingsDialog({ settings, onSave, onClose, welcome, onOpenGenres }) {
   const { t, lang, setLang, errorText } = useI18n();
   const [url, setUrl] = useState(settings.url || '');
   const [key, setKey] = useState(settings.key || '');
@@ -140,6 +140,16 @@ export default function SettingsDialog({ settings, onSave, onClose, welcome }) {
       {test.msg && <p className={`msg ${test.state === 'ok' ? 'msg-ok' : test.state === 'warn' ? 'msg-info' : 'msg-error'}`}>{test.msg}</p>}
 
       <BackupSection settings={settings} />
+
+      {onOpenGenres && (
+        <section className="settings-section">
+          <h3>{t('genresTitle')}</h3>
+          <p className="hint">{t('genresSettingsHint')}</p>
+          <div className="inline-form">
+            <button type="button" className="btn" onClick={onOpenGenres}>{t('genresManage')}</button>
+          </div>
+        </section>
+      )}
 
       <label className="field">
         <span>{t('language')}</span>

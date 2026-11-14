@@ -201,4 +201,21 @@ export default {
   showResults: { one: 'Pokaż {n} książkę', few: 'Pokaż {n} książki', many: 'Pokaż {n} książek', other: 'Pokaż {n} książki' },
   nowReadingTitle: 'Teraz czytam',
   nowSince: 'od {date} · {n}. dzień',
+
+  // Gatunki
+  genresTitle: 'Gatunki',
+  genresManage: 'Zarządzaj gatunkami',
+  genresSettingsHint: 'Zmiana nazwy lub połączenie gatunków – zmiana zapisze się we wszystkich książkach w arkuszu.',
+  genresIntro: 'Zmień nazwę gatunku albo połącz go z innym. Zmiana obejmie wszystkie książki tego gatunku i od razu zapisze się w arkuszu.',
+  genresEmpty: 'Żadna książka nie ma jeszcze gatunku.',
+  genresNone: { one: '{n} książka nie ma gatunku.', few: '{n} książki nie mają gatunku.', many: '{n} książek nie ma gatunku.', other: '{n} książki nie ma gatunku.' },
+  genreRename: 'Zmień nazwę',
+  genreMerge: 'Połącz',
+  genreNewName: 'Nowa nazwa gatunku',
+  genreMergeTarget: 'Połącz z gatunkiem…',
+  genreSimilar: 'Podobna nazwa:',
+  genreMergeInto: 'połącz z „{to}”',
+  genreRenameConfirm: { one: 'Zmienić nazwę gatunku „{from}” na „{to}” w {n} książce?', few: 'Zmienić nazwę gatunku „{from}” na „{to}” w {n} książkach?', many: 'Zmienić nazwę gatunku „{from}” na „{to}” w {n} książkach?', other: 'Zmienić nazwę gatunku „{from}” na „{to}” w {n} książki?' },
+  genreMergeConfirm: { one: 'Gatunek „{to}” już istnieje. Przenieść do niego {n} książkę z gatunku „{from}”?', few: 'Gatunek „{to}” już istnieje. Przenieść do niego {n} książki z gatunku „{from}”?', many: 'Gatunek „{to}” już istnieje. Przenieść do niego {n} książek z gatunku „{from}”?', other: 'Gatunek „{to}” już istnieje. Przenieść do niego {n} książki z gatunku „{from}”?' },
+  genreDone: 'Gotowe – „{from}” → „{to}”.',
 };

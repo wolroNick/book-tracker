@@ -12,6 +12,7 @@ import SettingsDialog from './components/SettingsDialog.jsx';
 import FillCoversDialog from './components/FillCoversDialog.jsx';
 import StatsView from './components/StatsView.jsx';
 import QuickActions from './components/QuickActions.jsx';
+import GenresDialog from './components/GenresDialog.jsx';
 import { BooksIcon, ChartIcon, GridIcon, ImageIcon, ListIcon, PlusIcon, RefreshIcon, SettingsIcon } from './components/Icons.jsx';
 
 const DEFAULT_FILTERS = { query: '', status: 'all', genre: '', forma: '', minRating: 0, sort: 'added', desc: true };
@@ -45,6 +46,7 @@ export default function App() {
   const [showSettings, setShowSettings] = useState(!configured);
   const [showFill, setShowFill] = useState(false);
   const [showFilters, setShowFilters] = useState(false);
+  const [showGenres, setShowGenres] = useState(false);
   const [quick, setQuick] = useState(null);
   const [quickTipSeen, setQuickTipSeen] = useState(() => load('bt.quickTip', false));
   const openQuick = (b) => {
@@ -323,6 +325,16 @@ export default function App() {
           genres={genres}
           resultCount={visible.length}
           onClose={() => setShowFilters(false)}
+          onManageGenres={configured ? () => { setShowFilters(false); setShowGenres(true); } : null}
+        />
+      )}
+
+      {showGenres && (
+        <GenresDialog
+          books={books}
+          onSaveMany={saveMany}
+          onRenamed={(from, to) => filters.genre === from && setFilters((f) => ({ ...f, genre: to }))}
+          onClose={() => setShowGenres(false)}
         />
       )}
 
@@ -331,6 +343,7 @@ export default function App() {
           settings={settings}
           welcome={!configured}
           onSave={setSettings}
+          onOpenGenres={configured ? () => { setShowSettings(false); setShowGenres(true); } : null}
           onClose={() => setShowSettings(false)}
         />
       )}

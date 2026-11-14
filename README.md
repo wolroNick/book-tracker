@@ -16,6 +16,7 @@ Dane są przechowywane w Twoim arkuszu Google, a aplikację można zainstalować
 - **ponowne czytanie** 🔁: przy przeczytanej książce szybka akcja „Czytam ponownie” tworzy nowy wpis z własnymi datami, oceną i formą (liczony osobno w statystykach),
 - **notatki z formatowaniem**: pogrubienie, kursywa, nagłówki, listy i cytaty, z podglądem,
 - **automatyczna kopia zapasowa** arkusza co 2 tygodnie,
+- **zarządzanie gatunkami** (Ustawienia lub panel Filtry → Zarządzaj gatunkami): zmiana nazwy i łączenie gatunków we wszystkich książkach naraz, z podpowiedzią podobnych nazw,
 - **forma**: papier 📖, e-book 📱 lub audiobook 🎧 – z ikonką na okładce, filtrem i statystykami,
 - filtrowanie (status, gatunek, ocena), sortowanie i wyszukiwarka,
 - widok siatki lub listy, interfejs po polsku lub angielsku,

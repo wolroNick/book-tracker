@@ -63,7 +63,7 @@ function Chip({ active, onClick, children }) {
 }
 
 // Panel filtrów wysuwany od dołu (na komputerze okno na środku).
-export function FiltersSheet({ filters, setFilters, genres, resultCount, onClose }) {
+export function FiltersSheet({ filters, setFilters, genres, resultCount, onClose, onManageGenres }) {
   const { t } = useI18n();
   const update = (patch) => setFilters((f) => ({ ...f, ...patch }));
   const toggle = (key, value) => update({ [key]: filters[key] === value ? '' : value });
@@ -103,7 +103,12 @@ export function FiltersSheet({ filters, setFilters, genres, resultCount, onClose
 
       {genres.length > 0 && (
         <section className="filter-group">
-          <h3>{t('genre')}</h3>
+          <div className="filter-head">
+            <h3>{t('genre')}</h3>
+            {onManageGenres && (
+              <button type="button" className="link-btn sort-dir" onClick={onManageGenres}>{t('genresManage')}</button>
+            )}
+          </div>
           <div className="chips">
             {genres.map((g) => (
               <Chip key={g} active={filters.genre === g} onClick={() => toggle('genre', g)}>{g}</Chip>

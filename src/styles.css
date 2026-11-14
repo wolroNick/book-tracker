@@ -542,3 +542,15 @@ body {
   .now-reading { margin-left: 0; margin-right: 0; padding-left: 0; padding-right: 0; }
 }
 .tab svg { vertical-align: -2px; }
+
+/* Zarządzanie gatunkami */
+.genre-list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; }
+.genre-row { padding: 10px 0; border-bottom: 1px solid var(--border); display: flex; flex-direction: column; gap: 8px; }
+.genre-row:last-child { border-bottom: none; }
+.genre-main { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.genre-name { font-weight: 600; }
+.genre-count { color: var(--muted); font-size: 0.85rem; margin-right: auto; }
+.genre-actions { display: flex; gap: 6px; }
+.genre-similar { margin: 0; font-size: 0.85rem; color: var(--muted); display: flex; flex-wrap: wrap; gap: 4px 10px; align-items: center; }
+.genre-edit select, .genre-edit input { flex: 1; min-width: 0; }
+@media (max-width: 640px) { .genre-edit { flex-wrap: wrap; } .genre-edit select, .genre-edit input { flex-basis: 100%; } }
