@@ -1,12 +1,24 @@
 import { useRef, useState } from 'react';
 import { useI18n } from '../i18n/index.jsx';
 import { renderNotes } from '../lib/notes.js';
+import { quoteToNotes } from '../lib/quotes.js';
+import { QuoteIcon } from './Icons.jsx';
 
 // Edytor notatek z paskiem formatowania i podglądem.
 export default function NotesEditor({ value, onChange }) {
   const { t } = useI18n();
   const ref = useRef(null);
   const [mode, setMode] = useState(value ? 'preview' : 'edit');
+  const [quoteForm, setQuoteForm] = useState(null); // null | { text, page }
+
+  // Dopisuje cytat na końcu notatek jako linie „> …” z numerem strony.
+  const addQuote = () => {
+    if (!quoteForm?.text.trim()) return;
+    const block = quoteToNotes(quoteForm.text, quoteForm.page);
+    onChange(value.trim() ? `${value.replace(/\s+$/, '')}\n\n${block}` : block);
+    setQuoteForm(null);
+    setMode('preview');
+  };
 
   // Owija zaznaczenie znacznikami (np. **…**).
   const wrap = (mark) => {
@@ -51,6 +63,9 @@ export default function NotesEditor({ value, onChange }) {
           <button type="button" className={mode === 'edit' ? 'active' : ''} onClick={() => setMode('edit')}>{t('notesEdit')}</button>
           <button type="button" className={mode === 'preview' ? 'active' : ''} onClick={() => setMode('preview')}>{t('notesPreview')}</button>
         </div>
+        <button type="button" className="btn btn-small btn-quote" onClick={() => setQuoteForm(quoteForm ? null : { text: '', page: '' })}>
+          <QuoteIcon /> {t('quoteAdd')}
+        </button>
         {mode === 'edit' && (
           <div className="fmt-tools">
             {tools.map((tool) => (
@@ -69,6 +84,34 @@ export default function NotesEditor({ value, onChange }) {
           </div>
         )}
       </div>
+      {quoteForm && (
+        <div className="quote-form appear">
+          <label className="field">
+            <span>{t('quoteText')}</span>
+            <textarea
+              rows={3}
+              autoFocus
+              value={quoteForm.text}
+              onChange={(e) => setQuoteForm({ ...quoteForm, text: e.target.value })}
+              placeholder={t('quoteTextPlaceholder')}
+            />
+          </label>
+          <div className="quote-form-row">
+            <label className="field quote-page-field">
+              <span>{t('quotePage')}</span>
+              <input
+                type="text"
+                inputMode="numeric"
+                value={quoteForm.page}
+                onChange={(e) => setQuoteForm({ ...quoteForm, page: e.target.value.replace(/[^\d]/g, '') })}
+              />
+            </label>
+            <span className="spacer" />
+            <button type="button" className="btn btn-ghost" onClick={() => setQuoteForm(null)}>{t('cancel')}</button>
+            <button type="button" className="btn btn-primary" onClick={addQuote} disabled={!quoteForm.text.trim()}>{t('quoteAddShort')}</button>
+          </div>
+        </div>
+      )}
       {mode === 'edit' ? (
         <textarea
           ref={ref}

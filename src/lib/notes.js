@@ -1,3 +1,5 @@
+import { splitPage } from './quotes.js';
+
 // Prosty, bezpieczny zapis formatowania notatek (podzbiór Markdown):
 //   **pogrubienie**, *kursywa*, # nagłówek, - lista, 1. lista numerowana, > cytat
 // Tekst jest najpierw zabezpieczany (escape), więc notatka nie może wstrzyknąć HTML.
@@ -27,7 +29,12 @@ export function renderNotes(source) {
     list = null;
   };
   const flushQuote = () => {
-    if (quote.length) out.push(`<blockquote>${quote.map(inline).join('<br>')}</blockquote>`);
+    if (quote.length) {
+      // Numer strony „(s. 12)” na końcu cytatu pokazujemy jako osobną plakietkę.
+      const { text, page } = splitPage(quote.join('\n'));
+      const pageHtml = page ? `<span class="quote-page">s. ${escapeHtml(page)}</span>` : '';
+      out.push(`<blockquote>${text.split('\n').map(inline).join('<br>')}${pageHtml}</blockquote>`);
+    }
     quote = [];
   };
   const flushAll = () => {

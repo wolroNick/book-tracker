@@ -14,6 +14,7 @@ Dane są przechowywane w Twoim arkuszu Google, a aplikację można zainstalować
 - ocena 1–10, data rozpoczęcia i zakończenia, gatunek, liczba stron, notatki,
 - **szybkie akcje**: przytrzymaj okładkę (na komputerze prawy przycisk myszy), aby oznaczyć książkę jako zaczętą lub przeczytaną dziś i od razu ją ocenić,
 - **ponowne czytanie** 🔁: przy przeczytanej książce szybka akcja „Czytam ponownie” tworzy nowy wpis z własnymi datami, oceną i formą (liczony osobno w statystykach),
+- **cytaty**: w notatkach przycisk „Dodaj cytat” (treść + strona) zapisuje cytat jako linie `> … (s. 12)`; zakładka **Cytaty** pokazuje wszystkie cytaty z wyszukiwarką, a na ekranie głównym przy każdym otwarciu pojawia się inny cytat,
 - **notatki z formatowaniem**: pogrubienie, kursywa, nagłówki, listy i cytaty, z podglądem,
 - **automatyczna kopia zapasowa** arkusza co 2 tygodnie,
 - **zarządzanie gatunkami** (Ustawienia lub panel Filtry → Zarządzaj gatunkami): zmiana nazwy i łączenie gatunków we wszystkich książkach naraz, z podpowiedzią podobnych nazw,

@@ -218,4 +218,22 @@ export default {
   genreRenameConfirm: { one: 'Zmienić nazwę gatunku „{from}” na „{to}” w {n} książce?', few: 'Zmienić nazwę gatunku „{from}” na „{to}” w {n} książkach?', many: 'Zmienić nazwę gatunku „{from}” na „{to}” w {n} książkach?', other: 'Zmienić nazwę gatunku „{from}” na „{to}” w {n} książki?' },
   genreMergeConfirm: { one: 'Gatunek „{to}” już istnieje. Przenieść do niego {n} książkę z gatunku „{from}”?', few: 'Gatunek „{to}” już istnieje. Przenieść do niego {n} książki z gatunku „{from}”?', many: 'Gatunek „{to}” już istnieje. Przenieść do niego {n} książek z gatunku „{from}”?', other: 'Gatunek „{to}” już istnieje. Przenieść do niego {n} książki z gatunku „{from}”?' },
   genreDone: 'Gotowe – „{from}” → „{to}”.',
+
+  // Cytaty
+  'tab.books': 'Książki',
+  'tab.quotes': 'Cytaty',
+  'tab.stats': 'Statystyki',
+  quoteAdd: 'Dodaj cytat',
+  quoteAddShort: 'Dodaj',
+  quoteText: 'Treść cytatu',
+  quoteTextPlaceholder: 'Przepisz fragment…',
+  quotePage: 'Strona',
+  quotesOpen: 'Cytat z Twoich notatek – otwórz wszystkie cytaty',
+  quotesSearch: 'Szukaj w cytatach…',
+  quotesAll: 'Wszystkie cytaty',
+  nQuotes: { one: '{n} cytat', few: '{n} cytaty', many: '{n} cytatów', other: '{n} cytatu' },
+  quotesNoResults: 'Brak cytatów pasujących do wyszukiwania.',
+  quotesHint: 'Cytaty pochodzą z notatek Twoich książek. Dotknij cytatu, aby otworzyć książkę.',
+  quotesEmptyTitle: 'Nie masz jeszcze cytatów',
+  quotesEmptyText: 'Otwórz książkę, przejdź do notatek i kliknij „Dodaj cytat”. Wpisz fragment i numer strony – cytat pojawi się tutaj, a na ekranie głównym przy każdym otwarciu aplikacji zobaczysz inny.',
 };

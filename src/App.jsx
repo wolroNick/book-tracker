@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useI18n } from './i18n/index.jsx';
 import { useBooks } from './hooks/useBooks.js';
 import { useGoals } from './hooks/useGoals.js';
@@ -13,7 +13,9 @@ import FillCoversDialog from './components/FillCoversDialog.jsx';
 import StatsView from './components/StatsView.jsx';
 import QuickActions from './components/QuickActions.jsx';
 import GenresDialog from './components/GenresDialog.jsx';
-import { BooksIcon, ChartIcon, GridIcon, ImageIcon, ListIcon, PlusIcon, RefreshIcon, SettingsIcon } from './components/Icons.jsx';
+import QuotesView, { QuoteTeaser } from './components/Quotes.jsx';
+import { extractQuotes } from './lib/quotes.js';
+import { BooksIcon, ChartIcon, GearIcon, GridIcon, ImageIcon, ListIcon, PlusIcon, QuoteIcon, RefreshIcon, SettingsIcon } from './components/Icons.jsx';
 
 const DEFAULT_FILTERS = { query: '', status: 'all', genre: '', forma: '', minRating: 0, sort: 'added', desc: true };
 
@@ -89,6 +91,20 @@ export default function App() {
   const missingCovers = useMemo(() => books.filter((b) => !b.okladka_url), [books]);
   const missingForm = useMemo(() => books.filter((b) => !b.forma), [books]);
   const readingNow = useMemo(() => books.filter((b) => b.status === 'czytam'), [books]);
+  const quotes = useMemo(() => extractQuotes(books), [books]);
+
+  // Cytat na ekranie głównym: losowany raz przy otwarciu aplikacji,
+  // inny niż przy poprzednim otwarciu (o ile jest więcej niż jeden).
+  const [sessionQuoteId, setSessionQuoteId] = useState(null);
+  useEffect(() => {
+    if (!quotes.length || quotes.some((q) => q.id === sessionQuoteId)) return;
+    const last = load('bt.lastQuote', null);
+    const pool = quotes.length > 1 ? quotes.filter((q) => q.id !== last) : quotes;
+    const picked = pool[Math.floor(Math.random() * pool.length)];
+    setSessionQuoteId(picked.id);
+    save('bt.lastQuote', picked.id);
+  }, [quotes, sessionQuoteId]);
+  const sessionQuote = quotes.find((q) => q.id === sessionQuoteId) || null;
   // Banner „Teraz czytam” tylko w widoku bez filtrów i wyszukiwania.
   const showNowReading = filters.status === 'all' && !filters.query.trim() && !activeFilterCount(filters);
   // Zmiana filtrów lub widoku odtwarza animację pojawiania się kart.
@@ -156,7 +172,7 @@ export default function App() {
           )}
           <button
             type="button"
-            className="icon-btn"
+            className="icon-btn desktop-only"
             onClick={() => setShowSettings(true)}
             title={t('settings')}
             aria-label={t('settings')}
@@ -167,7 +183,7 @@ export default function App() {
       </header>
 
       <nav className="main-tabs desktop-only" role="tablist">
-        {['books', 'stats'].map((v) => (
+        {['books', 'quotes', 'stats'].map((v) => (
           <button
             key={v}
             type="button"
@@ -176,7 +192,7 @@ export default function App() {
             className={tab === v ? 'active' : ''}
             onClick={() => setTab(v)}
           >
-            {v === 'books' ? t('tabBooks') : t('tabStats')}
+            {t(`tab.${v}`)}
           </button>
         ))}
       </nav>
@@ -190,7 +206,9 @@ export default function App() {
         {scriptOutdated && <div className="msg msg-info banner">{t('scriptOutdated')}</div>}
         {bulkMsg && <div className={`msg banner ${bulkMsg.ok ? 'msg-ok' : 'msg-error'}`}>{bulkMsg.text}</div>}
 
-        {tab === 'stats' ? (
+        {tab === 'quotes' ? (
+          <QuotesView quotes={quotes} onOpenBook={setEditing} />
+        ) : tab === 'stats' ? (
           <StatsView
             books={books}
             goals={goals}
@@ -208,6 +226,7 @@ export default function App() {
         />
 
         {showNowReading && <NowReading books={readingNow} onOpen={setEditing} onQuick={openQuick} />}
+        {showNowReading && <QuoteTeaser quote={sessionQuote} onOpen={() => setTab('quotes')} />}
 
         <div className="list-info">
           <span className="list-count">{t('bookCount', { n: visible.length })}</span>
@@ -268,6 +287,9 @@ export default function App() {
         <button type="button" className={tab === 'books' ? 'active' : ''} onClick={() => setTab('books')} aria-current={tab === 'books' ? 'page' : undefined}>
           <BooksIcon /> {t('tabBooks')}
         </button>
+        <button type="button" className={tab === 'quotes' ? 'active' : ''} onClick={() => setTab('quotes')} aria-current={tab === 'quotes' ? 'page' : undefined}>
+          <QuoteIcon size={22} /> {t('tab.quotes')}
+        </button>
         <button
           type="button"
           className="nav-add press"
@@ -278,6 +300,9 @@ export default function App() {
         </button>
         <button type="button" className={tab === 'stats' ? 'active' : ''} onClick={() => setTab('stats')} aria-current={tab === 'stats' ? 'page' : undefined}>
           <ChartIcon /> {t('tabStats')}
+        </button>
+        <button type="button" onClick={() => setShowSettings(true)}>
+          <GearIcon /> {t('settings')}
         </button>
       </nav>
 
