@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useI18n } from './i18n/index.jsx';
 import { useBooks } from './hooks/useBooks.js';
 import { useGoals } from './hooks/useGoals.js';
@@ -105,6 +105,9 @@ export default function App() {
     save('bt.lastQuote', picked.id);
   }, [quotes, sessionQuoteId]);
   const sessionQuote = quotes.find((q) => q.id === sessionQuoteId) || null;
+  // Cytat, do którego przewinąć zakładkę „Cytaty” (po dotknięciu cytatu na ekranie głównym).
+  const [focusQuoteId, setFocusQuoteId] = useState(null);
+  const clearFocusQuote = useCallback(() => setFocusQuoteId(null), []);
   // Banner „Teraz czytam” tylko w widoku bez filtrów i wyszukiwania.
   const showNowReading = filters.status === 'all' && !filters.query.trim() && !activeFilterCount(filters);
   // Zmiana filtrów lub widoku odtwarza animację pojawiania się kart.
@@ -207,7 +210,7 @@ export default function App() {
         {bulkMsg && <div className={`msg banner ${bulkMsg.ok ? 'msg-ok' : 'msg-error'}`}>{bulkMsg.text}</div>}
 
         {tab === 'quotes' ? (
-          <QuotesView quotes={quotes} onOpenBook={setEditing} />
+          <QuotesView quotes={quotes} onOpenBook={setEditing} focusId={focusQuoteId} onFocusDone={clearFocusQuote} />
         ) : tab === 'stats' ? (
           <StatsView
             books={books}
@@ -226,7 +229,13 @@ export default function App() {
         />
 
         {showNowReading && <NowReading books={readingNow} onOpen={setEditing} onQuick={openQuick} />}
-        {showNowReading && <QuoteTeaser quote={sessionQuote} onOpen={() => setTab('quotes')} />}
+        {showNowReading && <QuoteTeaser
+            quote={sessionQuote}
+            onOpen={() => {
+              setFocusQuoteId(sessionQuote.id);
+              setTab('quotes');
+            }}
+          />}
 
         <div className="list-info">
           <span className="list-count">{t('bookCount', { n: visible.length })}</span>

@@ -592,3 +592,10 @@ body {
 .quotes-empty p { margin: 0; max-width: 420px; line-height: 1.5; }
 .quotes-empty-icon { color: var(--star); }
 @media (max-width: 640px) { .bottom-nav.mobile-only { display: grid !important; } }
+
+/* Podświetlenie cytatu otwartego z ekranu głównego */
+.quote-card { transition: background 0.6s ease, border-color 0.6s ease, box-shadow 0.6s ease; }
+.quote-card.quote-highlight { background: #fdf3e4; border-color: var(--star); box-shadow: 0 0 0 3px rgba(201, 138, 18, 0.25); }
+.quote-card-cover.cover-placeholder, .now-cover.cover-placeholder { padding: 3px; }
+.quote-card-cover .cover-placeholder-title { font-size: 0.45rem; word-break: break-word; -webkit-line-clamp: 3; }
+.quote-card-cover .cover-placeholder-author { display: none; }
