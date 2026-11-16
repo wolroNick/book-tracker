@@ -6,6 +6,21 @@ import BookCover from './BookCover.jsx';
 import CountUp from './CountUp.jsx';
 import { FormIcon } from './Icons.jsx';
 import { FORMS } from '../lib/books.js';
+import YearSummary, { YearSummaryCard } from './YearSummary.jsx';
+import { hasSummary } from '../lib/yearSummary.js';
+import { extractQuotes } from '../lib/quotes.js';
+
+// Który rok pokazać na karcie „Podsumowanie roku”: miniony rok zawsze,
+// bieżący w grudniu, a w styczniu – poprzedni (gdy wybrany jest bieżący).
+function summaryYearFor(year, books) {
+  if (year === 'all') return null;
+  const now = new Date();
+  const current = now.getFullYear();
+  let y = null;
+  if (year < current || (year === current && now.getMonth() === 11)) y = year;
+  else if (year === current && now.getMonth() === 0) y = current - 1;
+  return y && hasSummary(books, y) ? y : null;
+}
 
 function StatTile({ label, value, sub }) {
   return (
@@ -103,6 +118,8 @@ export default function StatsView({ books, goals, setGoal, goalsSynced, onOpen }
   const [year, setYear] = useState(years[0]);
   const [metric, setMetric] = useState('books');
   const [forma, setForma] = useState('');
+  const [summaryOpen, setSummaryOpen] = useState(false);
+  const summaryYear = useMemo(() => summaryYearFor(year, books), [year, books]);
   const stats = useMemo(() => computeStats(books, year, forma), [books, year, forma]);
   const formTotal = stats.forms.reduce((a, f) => a + f.value, 0);
 
@@ -133,6 +150,17 @@ export default function StatsView({ books, goals, setGoal, goalsSynced, onOpen }
           </button>
         ))}
       </div>
+
+      {summaryYear && <YearSummaryCard key={summaryYear} year={summaryYear} onOpen={() => setSummaryOpen(true)} />}
+      {summaryOpen && summaryYear && (
+        <YearSummary
+          books={books}
+          year={summaryYear}
+          goal={goals[summaryYear]}
+          quotes={extractQuotes(books)}
+          onClose={() => setSummaryOpen(false)}
+        />
+      )}
 
       <div className="status-tabs" role="tablist" aria-label={t('field.forma')}>
         {['', ...FORMS].map((f) => (

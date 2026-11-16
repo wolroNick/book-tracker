@@ -599,3 +599,90 @@ body {
 .quote-card-cover.cover-placeholder, .now-cover.cover-placeholder { padding: 3px; }
 .quote-card-cover .cover-placeholder-title { font-size: 0.45rem; word-break: break-word; -webkit-line-clamp: 3; }
 .quote-card-cover .cover-placeholder-author { display: none; }
+
+/* Podsumowanie roku */
+.ys-entry {
+  display: flex; align-items: center; gap: 14px; width: 100%; padding: 18px; border: none; border-radius: 20px; cursor: pointer; text-align: left;
+  color: #fff; background: linear-gradient(120deg, #2b2340, #6a3b5c, #c2683f, #2b2340); background-size: 200% 100%;
+  box-shadow: 0 12px 26px rgba(60, 30, 40, 0.3); animation: ysShine 6s ease-in-out infinite;
+}
+@keyframes ysShine { 0%, 100% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } }
+.ys-entry-icon { width: 52px; height: 52px; flex: none; border-radius: 16px; background: rgba(255, 255, 255, 0.15); color: #ffd56b; display: flex; align-items: center; justify-content: center; }
+.ys-entry-text { display: flex; flex-direction: column; gap: 2px; flex: 1; min-width: 0; }
+.ys-entry-label { font-size: 0.7rem; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; opacity: 0.85; }
+.ys-entry-title { font-size: 1.3rem; font-weight: 600; line-height: 1.15; }
+.ys-entry-sub { font-size: 0.82rem; opacity: 0.88; }
+.ys-entry-arrow { font-size: 2rem; line-height: 1; opacity: 0.9; }
+
+.ys { position: fixed; inset: 0; z-index: 80; color: #fff; overflow: hidden; transition: background 0.6s ease; font-family: 'Inter', system-ui, sans-serif; }
+.ys-bars { position: absolute; top: calc(14px + env(safe-area-inset-top)); left: 12px; right: 12px; display: flex; gap: 4px; z-index: 3; max-width: 560px; margin: 0 auto; }
+.ys-bar { flex: 1; height: 3px; border-radius: 3px; background: rgba(255, 255, 255, 0.3); overflow: hidden; }
+.ys-bar > span { display: block; height: 100%; background: #fff; transition: width 0.4s ease; }
+.ys-close { position: absolute; top: calc(26px + env(safe-area-inset-top)); right: 10px; z-index: 4; width: 44px; height: 44px; border: none; background: none; color: #fff; font-size: 1.3rem; cursor: pointer; }
+.ys-tap { position: absolute; top: 80px; bottom: 120px; z-index: 2; border: none; background: transparent; cursor: pointer; -webkit-tap-highlight-color: transparent; }
+.ys-tap-prev { left: 0; width: 30%; }
+.ys-tap-next { right: 0; width: 70%; }
+.ys-slide {
+  position: absolute; inset: 0; z-index: 1; display: flex; flex-direction: column; justify-content: center;
+  padding: 84px 28px 120px; box-sizing: border-box; max-width: 560px; margin: 0 auto; pointer-events: none;
+}
+.ys-center { align-items: center; text-align: center; }
+.ys-in { opacity: 0; animation: ysIn 0.6s cubic-bezier(0.2, 0.7, 0.2, 1) forwards; }
+.ys-in.d1 { animation-delay: 0.15s; } .ys-in.d2 { animation-delay: 0.35s; } .ys-in.d3 { animation-delay: 0.55s; } .ys-in.d4 { animation-delay: 0.75s; } .ys-in.d5 { animation-delay: 0.95s; }
+@keyframes ysIn { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: none; } }
+.ys-grow { transform-origin: bottom; transform: scaleY(0); animation: ysGrow 0.8s cubic-bezier(0.2, 0.8, 0.2, 1) forwards; }
+@keyframes ysGrow { to { transform: scaleY(1); } }
+.ys-gold { color: #ffd56b; }
+.ys-year { font-size: 6.5rem; font-weight: 600; line-height: 1; margin-top: 12px; }
+.ys-sub { font-size: 1.6rem; margin-top: 10px; }
+.ys-hint { margin-top: 40px; font-size: 0.9rem; opacity: 0.8; }
+.ys-lead { font-size: 1.1rem; opacity: 0.85; }
+.ys-huge { font-size: 7.5rem; font-weight: 600; line-height: 1; }
+.ys-word { font-size: 1.9rem; }
+.ys-line { margin-top: 28px; font-size: 1.1rem; }
+.ys-line strong { font-size: 1.9rem; }
+.ys-muted { font-size: 0.95rem; opacity: 0.85; margin-top: 6px; }
+.ys-pill { align-self: flex-start; margin-top: 28px; padding: 10px 16px; border-radius: 999px; background: rgba(255, 255, 255, 0.14); font-size: 0.95rem; }
+.ys-pill.gold { background: rgba(255, 213, 107, 0.18); border: 1px solid rgba(255, 213, 107, 0.5); }
+.ys-title { font-size: 1.9rem; font-weight: 600; margin-bottom: 4px; }
+.ys-podium { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; align-items: end; margin-top: 30px; }
+.ys-place { display: flex; flex-direction: column; align-items: center; gap: 6px; text-align: center; min-width: 0; }
+.ys-cover { width: 84px; box-shadow: 0 10px 24px rgba(0, 0, 0, 0.35); }
+.place-1 .ys-cover { width: 108px; }
+.place-2 .ys-cover { width: 92px; }
+.ys-place-no { font-size: 1.6rem; font-weight: 600; }
+.place-1 .ys-place-no { font-size: 2.2rem; color: #ffd56b; }
+.ys-place-title { font-size: 0.78rem; line-height: 1.25; overflow: hidden; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; }
+.ys-card { display: flex; flex-direction: column; gap: 2px; padding: 16px; margin-top: 14px; border-radius: 16px; background: rgba(255, 255, 255, 0.1); font-size: 0.9rem; }
+.ys-card-title { font-size: 1.4rem; font-weight: 600; }
+.ys-label { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.08em; opacity: 0.78; }
+.ys-label strong { opacity: 1; text-transform: none; letter-spacing: 0; font-size: 0.95rem; }
+.ys-fact { display: flex; flex-direction: column; gap: 4px; margin-top: 20px; }
+.ys-fact-value { font-size: 1.6rem; font-weight: 600; }
+.ys-fact-value small { font-family: 'Inter', sans-serif; font-weight: 400; font-size: 0.95rem; opacity: 0.8; }
+.ys-split { display: flex; gap: 2px; height: 14px; border-radius: 999px; overflow: hidden; margin-top: 4px; }
+.ys-legend { display: flex; flex-wrap: wrap; gap: 6px 14px; font-size: 0.82rem; margin-top: 6px; }
+.ys-legend i { display: inline-block; width: 10px; height: 10px; border-radius: 3px; margin-right: 2px; }
+.ys-months { display: flex; align-items: flex-end; gap: 5px; height: 70px; margin-top: 6px; }
+.ys-months span { flex: 1; border-radius: 4px 4px 0 0; background: rgba(255, 255, 255, 0.4); }
+.ys-months span.best { background: #ffd56b; }
+.ys-quote-icon { margin-top: 18px; display: block; }
+.ys-quote { font-size: 1.55rem; font-style: italic; line-height: 1.4; margin-top: 10px; white-space: pre-line; }
+.ys-note { margin-top: 28px; font-size: 0.75rem; opacity: 0.65; }
+.ys-compare { display: flex; align-items: flex-end; gap: 28px; height: 230px; margin-top: 30px; }
+.ys-compare-col { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: flex-end; gap: 8px; height: 100%; font-size: 1.1rem; }
+.ys-compare-col .ys-grow { width: 70px; border-radius: 8px 8px 0 0; background: rgba(255, 255, 255, 0.35); }
+.ys-compare-col .ys-grow.now { background: #ffd56b; }
+.ys-compare-now { font-size: 1.7rem; font-weight: 600; }
+.ys-strong { font-weight: 600; }
+.ys-big-line { margin-top: 26px; font-size: 1.6rem; font-weight: 600; }
+.ys-preview { width: min(60vw, 240px); aspect-ratio: 9 / 16; border-radius: 18px; overflow: hidden; box-shadow: 0 16px 40px rgba(0, 0, 0, 0.4); display: flex; align-items: center; justify-content: center; background: rgba(255, 255, 255, 0.08); }
+.ys-preview img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.ys-actions { position: absolute; left: 24px; right: 24px; bottom: calc(36px + env(safe-area-inset-bottom)); z-index: 3; display: flex; gap: 10px; max-width: 512px; margin: 0 auto; }
+.ys-btn { flex: 1; height: 50px; border: 1px solid rgba(255, 255, 255, 0.45); border-radius: 14px; background: transparent; color: #fff; font: inherit; font-weight: 600; cursor: pointer; }
+.ys-btn.primary { border: none; background: #ffd56b; color: #2b2340; }
+.ys-btn:disabled { opacity: 0.5; }
+@media (prefers-reduced-motion: reduce) {
+  .ys-entry { animation: none; }
+  .ys-in, .ys-grow { animation: none; opacity: 1; transform: none; }
+}
