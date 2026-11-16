@@ -14,7 +14,7 @@ Dane są przechowywane w Twoim arkuszu Google, a aplikację można zainstalować
 - ocena 1–10, data rozpoczęcia i zakończenia, gatunek, liczba stron, notatki,
 - **szybkie akcje**: przytrzymaj okładkę (na komputerze prawy przycisk myszy), aby oznaczyć książkę jako zaczętą lub przeczytaną dziś i od razu ją ocenić,
 - **ponowne czytanie** 🔁: przy przeczytanej książce szybka akcja „Czytam ponownie” tworzy nowy wpis z własnymi datami, oceną i formą (liczony osobno w statystykach),
-- **podsumowanie roku** (Statystyki → karta „Twój RRRR w książkach”; od 1 grudnia do końca stycznia oraz dla minionych lat): 8 ekranów jak relacje – liczby, top 3, rekordy, profil czytelnika, cytat roku, porównanie z poprzednim rokiem i grafika 1080×1920 do zapisania lub udostępnienia,
+- **podsumowanie roku** (Statystyki → karta „Twój RRRR w książkach”; od 15 grudnia do końca stycznia oraz dla minionych lat): 8 ekranów jak relacje – liczby, top 3, rekordy, profil czytelnika, cytat roku, porównanie z poprzednim rokiem i grafika 1080×1920 do zapisania lub udostępnienia,
 - **cytaty**: w notatkach przycisk „Dodaj cytat” (treść + strona) zapisuje cytat jako linie `> … (s. 12)`; zakładka **Cytaty** pokazuje wszystkie cytaty z wyszukiwarką, a na ekranie głównym przy każdym otwarciu pojawia się inny cytat,
 - **notatki z formatowaniem**: pogrubienie, kursywa, nagłówki, listy i cytaty, z podglądem,
 - **automatyczna kopia zapasowa** arkusza co 2 tygodnie,

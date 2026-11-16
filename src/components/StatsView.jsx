@@ -11,13 +11,14 @@ import { hasSummary } from '../lib/yearSummary.js';
 import { extractQuotes } from '../lib/quotes.js';
 
 // Który rok pokazać na karcie „Podsumowanie roku”: miniony rok zawsze,
-// bieżący w grudniu, a w styczniu – poprzedni (gdy wybrany jest bieżący).
+// bieżący od 15 grudnia, a w styczniu – poprzedni (gdy wybrany jest bieżący).
 function summaryYearFor(year, books) {
   if (year === 'all') return null;
   const now = new Date();
   const current = now.getFullYear();
   let y = null;
-  if (year < current || (year === current && now.getMonth() === 11)) y = year;
+  const lateDecember = now.getMonth() === 11 && now.getDate() >= 15;
+  if (year < current || (year === current && lateDecember)) y = year;
   else if (year === current && now.getMonth() === 0) y = current - 1;
   return y && hasSummary(books, y) ? y : null;
 }
