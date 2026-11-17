@@ -746,3 +746,27 @@ body {
   .card-backdrop { padding: 0; align-items: flex-end; }
   .book-card { max-width: none; max-height: 96dvh; border-radius: 18px 18px 0 0; animation: sheetUp 0.32s cubic-bezier(0.2, 0.8, 0.2, 1) both; }
 }
+
+/* Komunikat z „Cofnij” */
+.toast-region { position: fixed; left: 0; right: 0; bottom: calc(24px + env(safe-area-inset-bottom)); z-index: 90; display: flex; justify-content: center; padding: 0 12px; pointer-events: none; }
+.toast {
+  display: flex; align-items: center; gap: 4px; max-width: 520px; width: max-content; min-height: 50px; padding: 4px 4px 4px 18px;
+  border-radius: 14px; background: #2b2723; color: #fbf0e4; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+  pointer-events: auto; animation: toastIn 0.3s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+}
+.toast-error { background: #7a1f19; }
+.toast-text { flex: 1; min-width: 0; font-size: 0.92rem; padding: 6px 0; }
+.toast-undo { flex: none; min-height: 42px; padding: 0 14px; border: none; border-radius: 10px; background: none; color: #ffd56b; font: inherit; font-weight: 700; cursor: pointer; }
+.toast-undo:hover { background: rgba(255, 255, 255, 0.08); }
+.toast-close { flex: none; width: 40px; height: 42px; border: none; background: none; color: rgba(251, 240, 228, 0.7); cursor: pointer; font-size: 0.9rem; }
+@keyframes toastIn { from { opacity: 0; transform: translateY(16px); } }
+@media (max-width: 640px) {
+  .toast-region { bottom: calc(92px + env(safe-area-inset-bottom)); }
+  .toast { width: 100%; }
+}
+@media (min-width: 641px) {
+  /* Na komputerze u góry ekranu – nie zasłania przycisków karty ani okien. */
+  .toast-region { top: 20px; bottom: auto; }
+  .toast { animation-name: toastInTop; }
+  @keyframes toastInTop { from { opacity: 0; transform: translateY(-16px); } }
+}

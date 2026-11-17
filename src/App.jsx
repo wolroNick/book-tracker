@@ -15,6 +15,7 @@ import StatsView from './components/StatsView.jsx';
 import QuickActions from './components/QuickActions.jsx';
 import BookCard from './components/BookCard.jsx';
 import GenresDialog from './components/GenresDialog.jsx';
+import Toast, { useToast } from './components/Toast.jsx';
 import QuotesView, { QuoteTeaser } from './components/Quotes.jsx';
 import { extractQuotes } from './lib/quotes.js';
 import { BooksIcon, ChartIcon, GearIcon, GridIcon, ImageIcon, ListIcon, PlusIcon, QuoteIcon, RefreshIcon, SettingsIcon } from './components/Icons.jsx';
@@ -34,6 +35,61 @@ export default function App() {
   const { t, errorText } = useI18n();
   const [settings, setSettingsState] = useState(() => load('bt.settings', { url: '', key: '' }));
   const { books, syncing, error, refresh, saveBook, deleteBook, saveMany, configured, scriptOutdated } = useBooks(settings);
+  const toast = useToast();
+
+  // „Cofnij” w komunikacie: wykonuje akcję przywracającą i informuje o wyniku.
+  const runUndo = async () => {
+    const undo = toast.toast?.undo;
+    toast.hide();
+    if (!undo) return;
+    try {
+      await undo();
+      toast.show(t('toastUndone'));
+    } catch (err) {
+      toast.show(errorText(err), { error: true });
+    }
+  };
+
+  // Opis zmiany jednej książki (do komunikatu po zapisie).
+  const describeSave = (prev, next) => {
+    const title = next.tytul;
+    if (!prev) return next.ponowne && next.status === 'czytam' ? t('toastReread', { title }) : t('toastAdded', { title });
+    if (prev.status !== next.status) return t(`toastStatus.${next.status}`, { title });
+    const onlyRating = Object.keys(next).every((k) => k === 'ocena' || String(prev[k] ?? '') === String(next[k] ?? ''));
+    if (onlyRating) return next.ocena ? t('toastRating', { title, n: next.ocena }) : t('toastRatingRemoved', { title });
+    return t('toastSaved', { title });
+  };
+
+  // Zapis z komunikatem i możliwością cofnięcia (poprzednia wersja albo usunięcie nowej książki).
+  const saveWithUndo = async (book) => {
+    const prev = book.id ? books.find((b) => b.id === book.id) : null;
+    const saved = await saveBook(book);
+    toast.show(describeSave(prev, saved), {
+      undo: prev ? () => saveBook(prev) : () => deleteBook(saved.id),
+    });
+    return saved;
+  };
+
+  // Usunięcie z możliwością przywrócenia (książka wraca na koniec arkusza).
+  const deleteWithUndo = async (id) => {
+    const prev = books.find((b) => b.id === id);
+    await deleteBook(id);
+    if (prev) toast.show(t('toastDeleted', { title: prev.tytul }), { undo: () => saveBook(prev) });
+  };
+
+  // Zmiana gatunku w wielu książkach naraz (okno „Gatunki”).
+  const saveGenreChange = async (list) => {
+    const prevs = list.map((b) => books.find((x) => x.id === b.id)).filter(Boolean);
+    await saveMany(list);
+    const from = prevs[0]?.gatunek;
+    const to = list[0]?.gatunek;
+    toast.show(t('toastGenre', { from, to, n: list.length }), {
+      undo: async () => {
+        await saveMany(prevs);
+        setFilters((f) => (f.genre === to ? { ...f, genre: from } : f));
+      },
+    });
+  };
   const [bulkBusy, setBulkBusy] = useState(false);
   const [bulkMsg, setBulkMsg] = useState(null); // { ok: bool, text }
 
@@ -134,8 +190,9 @@ export default function App() {
     setBulkBusy(true);
     setBulkMsg(null);
     try {
+      const prevs = missingForm;
       await saveMany(missingForm.map((b) => ({ ...b, forma: 'papier' })));
-      setBulkMsg({ ok: true, text: t('setPaperDone', { n }) });
+      toast.show(t('setPaperDone', { n }), { undo: () => saveMany(prevs) });
     } catch (err) {
       setBulkMsg({ ok: false, text: errorText(err) });
     } finally {
@@ -345,7 +402,7 @@ export default function App() {
         <BookCard
           key={`card-${viewingBook.id}`}
           book={viewingBook}
-          onSave={saveBook}
+          onSave={saveWithUndo}
           canReread={!scriptOutdated}
           onEdit={() => editBook(viewingBook)}
           onAddQuote={() => editBook(viewingBook, true)}
@@ -359,8 +416,8 @@ export default function App() {
           book={editing}
           genres={genres}
           startWithQuote={editWithQuote}
-          onSave={saveBook}
-          onDelete={deleteBook}
+          onSave={saveWithUndo}
+          onDelete={deleteWithUndo}
           onClose={() => setEditing(null)}
         />
       )}
@@ -369,7 +426,7 @@ export default function App() {
         <QuickActions
           key={`quick-${quick.id}`}
           book={quick}
-          onSave={saveBook}
+          onSave={saveWithUndo}
           canReread={!scriptOutdated}
           onEdit={(b) => {
             setQuick(null);
@@ -393,11 +450,13 @@ export default function App() {
       {showGenres && (
         <GenresDialog
           books={books}
-          onSaveMany={saveMany}
+          onSaveMany={saveGenreChange}
           onRenamed={(from, to) => filters.genre === from && setFilters((f) => ({ ...f, genre: to }))}
           onClose={() => setShowGenres(false)}
         />
       )}
+
+      <Toast toast={toast.toast} onUndo={runUndo} onClose={toast.hide} />
 
       {showSettings && (
         <SettingsDialog

@@ -295,4 +295,18 @@ export default {
   cardNoNotes: 'Brak notatek. Dodaj wrażenia albo ciekawy cytat.',
   cardStartReading: 'Zaczynam czytać',
   cardFinished: 'Przeczytana! Jak ją oceniasz?',
+
+  // Komunikaty
+  undo: 'Cofnij',
+  toastUndone: 'Cofnięto',
+  toastSaved: 'Zapisano „{title}”',
+  toastAdded: 'Dodano „{title}”',
+  toastReread: 'Ponowne czytanie „{title}” – od dziś',
+  toastDeleted: 'Usunięto „{title}”',
+  toastRating: '„{title}” – ocena {n}/10',
+  toastRatingRemoved: '„{title}” – usunięto ocenę',
+  'toastStatus.przeczytane': '„{title}” – przeczytana',
+  'toastStatus.czytam': '„{title}” – czytasz od dziś',
+  'toastStatus.do przeczytania': '„{title}” – do przeczytania',
+  toastGenre: { one: '„{from}” → „{to}” ({n} książka)', few: '„{from}” → „{to}” ({n} książki)', many: '„{from}” → „{to}” ({n} książek)', other: '„{from}” → „{to}” ({n} książki)' },
 };

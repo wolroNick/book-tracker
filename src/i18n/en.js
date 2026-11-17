@@ -280,4 +280,17 @@ export default {
   cardNoNotes: 'No notes yet. Add your thoughts or an interesting quote.',
   cardStartReading: 'Start reading',
   cardFinished: 'Finished! How would you rate it?',
+
+  undo: 'Undo',
+  toastUndone: 'Undone',
+  toastSaved: 'Saved “{title}”',
+  toastAdded: 'Added “{title}”',
+  toastReread: 'Re-reading “{title}” – from today',
+  toastDeleted: 'Deleted “{title}”',
+  toastRating: '“{title}” – rated {n}/10',
+  toastRatingRemoved: '“{title}” – rating removed',
+  'toastStatus.przeczytane': '“{title}” – finished',
+  'toastStatus.czytam': '“{title}” – reading from today',
+  'toastStatus.do przeczytania': '“{title}” – to read',
+  toastGenre: { one: '“{from}” → “{to}” ({n} book)', other: '“{from}” → “{to}” ({n} books)' },
 };
