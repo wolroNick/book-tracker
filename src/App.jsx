@@ -2,6 +2,7 @@ import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useI18n } from './i18n/index.jsx';
 import { useBooks } from './hooks/useBooks.js';
 import { useGoals } from './hooks/useGoals.js';
+import { useBackHandler } from './hooks/useBackHandler.js';
 import { load, save } from './lib/storage.js';
 import { STATUSES } from './lib/books.js';
 import Toolbar, { FiltersSheet, activeFilterCount } from './components/Toolbar.jsx';
@@ -42,6 +43,8 @@ export default function App() {
     save('bt.tab', v);
     window.scrollTo(0, 0);
   };
+  // „Wstecz” na zakładce Cytaty/Statystyki wraca do Książek.
+  useBackHandler(tab !== 'books', () => setTab('books'));
   const [view, setViewState] = useState(() => load('bt.view', 'grid'));
   const [filters, setFiltersState] = useState(() => ({ ...DEFAULT_FILTERS, ...load('bt.filters', {}), query: '' }));
   const [editing, setEditing] = useState(null); // null | {} (nowa) | książka

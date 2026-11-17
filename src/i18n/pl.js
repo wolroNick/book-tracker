@@ -281,4 +281,6 @@ export default {
   'ysFormPct.papier': '{pct}% na papierze',
   'ysFormPct.audiobook': '{pct}% w audiobookach',
   'ysFormPct.e-book': '{pct}% w e-bookach',
+
+  unsavedConfirm: 'Masz niezapisane zmiany. Zamknąć bez zapisywania?',
 };

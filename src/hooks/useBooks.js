@@ -14,6 +14,7 @@ export function useBooks(settings) {
   // Stara wersja skryptu nie zna kolumny „forma” – trzeba go zaktualizować.
   const [scriptOutdated, setScriptOutdated] = useState(false);
   const booksRef = useRef(books);
+  const lastSyncRef = useRef(0);
 
   const setBooks = useCallback((next) => {
     booksRef.current = next;
@@ -29,6 +30,7 @@ export function useBooks(settings) {
     setError(null);
     try {
       const list = await sheetApi.list(settings);
+      lastSyncRef.current = Date.now();
       setScriptOutdated(list.length > 0 && !('ponowne' in list[0]));
       setBooks(list.map(normalizeBook));
     } catch (err) {
@@ -40,6 +42,20 @@ export function useBooks(settings) {
 
   useEffect(() => {
     refresh();
+  }, [refresh]);
+
+  // Po powrocie do aplikacji (z innej karty/aplikacji) albo po odzyskaniu internetu
+  // pobieramy zmiany z arkusza – np. książkę dodaną w międzyczasie na komputerze.
+  useEffect(() => {
+    const maybeRefresh = () => {
+      if (document.visibilityState === 'visible' && Date.now() - lastSyncRef.current > 30000) refresh();
+    };
+    document.addEventListener('visibilitychange', maybeRefresh);
+    window.addEventListener('online', maybeRefresh);
+    return () => {
+      document.removeEventListener('visibilitychange', maybeRefresh);
+      window.removeEventListener('online', maybeRefresh);
+    };
   }, [refresh]);
 
   // Zapis jednej książki (nowej lub edytowanej). Rzuca błąd, jeśli się nie uda.

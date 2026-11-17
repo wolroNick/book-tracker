@@ -77,6 +77,8 @@ export default function BookForm({ book, genres, onSave, onDelete, onClose }) {
   const { t, errorText } = useI18n();
   const isNew = !book?.id;
   const [form, setForm] = useState(() => ({ ...emptyBook(), ...book }));
+  const [initial] = useState(() => JSON.stringify({ ...emptyBook(), ...book }));
+  const dirty = JSON.stringify(form) !== initial;
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState('');
   const [coverState, setCoverState] = useState('idle'); // idle | searching | notfound | error
@@ -118,6 +120,15 @@ export default function BookForm({ book, genres, onSave, onDelete, onClose }) {
     }
   };
 
+  // Zamknięcie bez zapisu (✕, tło, Esc, Anuluj, systemowe „Wstecz”): pytamy, gdy są zmiany.
+  // Zwraca false, gdy użytkownik zostaje w formularzu.
+  const requestClose = () => {
+    if (busy) return false;
+    if (dirty && !window.confirm(t('unsavedConfirm'))) return false;
+    onClose();
+    return true;
+  };
+
   const submit = async (e) => {
     e.preventDefault();
     if (!form.tytul.trim()) {
@@ -153,7 +164,7 @@ export default function BookForm({ book, genres, onSave, onDelete, onClose }) {
   return (
     <Modal
       title={isNew ? t('newBook') : t('editBook')}
-      onClose={onClose}
+      onClose={requestClose}
       wide
       footer={
         <>
@@ -163,7 +174,7 @@ export default function BookForm({ book, genres, onSave, onDelete, onClose }) {
             </button>
           )}
           <span className="spacer" />
-          <button type="button" className="btn btn-ghost" onClick={onClose} disabled={busy}>
+          <button type="button" className="btn btn-ghost" onClick={requestClose} disabled={busy}>
             {t('cancel')}
           </button>
           <button type="submit" form="book-form" className="btn btn-primary" disabled={busy}>

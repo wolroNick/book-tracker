@@ -4,6 +4,7 @@ import BookCover from './BookCover.jsx';
 import { QuoteIcon, SparkleIcon } from './Icons.jsx';
 import { computeSummary } from '../lib/yearSummary.js';
 import { renderShareImage } from '../lib/shareImage.js';
+import { useBackHandler } from '../hooks/useBackHandler.js';
 
 const BACKGROUNDS = {
   intro: 'linear-gradient(160deg, #2b2340 0%, #6a3b5c 55%, #c2683f 100%)',
@@ -25,6 +26,7 @@ export default function YearSummary({ books, year, goal, quotes, onClose }) {
   const [index, setIndex] = useState(0);
   const [image, setImage] = useState(null); // { blob, url }
   const [busy, setBusy] = useState(false);
+  useBackHandler(true, onClose);
 
   const nf = (v, d = 0) => v.toLocaleString(lang, { maximumFractionDigits: d, minimumFractionDigits: d });
   const word = (key, n) => t(key, { n }).replace(/^\S+\s/, ''); // sama odmiana słowa, bez liczby

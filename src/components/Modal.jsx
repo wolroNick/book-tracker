@@ -1,8 +1,10 @@
 import { useEffect } from 'react';
 import { useI18n } from '../i18n/index.jsx';
+import { useBackHandler } from '../hooks/useBackHandler.js';
 
 export default function Modal({ title, onClose, children, footer, wide }) {
   const { t } = useI18n();
+  useBackHandler(true, onClose);
 
   useEffect(() => {
     const onKey = (e) => e.key === 'Escape' && onClose();

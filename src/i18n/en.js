@@ -267,4 +267,6 @@ export default {
   'ysFormPct.papier': '{pct}% on paper',
   'ysFormPct.audiobook': '{pct}% as audiobooks',
   'ysFormPct.e-book': '{pct}% as e-books',
+
+  unsavedConfirm: 'You have unsaved changes. Close without saving?',
 };
