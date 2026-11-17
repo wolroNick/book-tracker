@@ -73,7 +73,7 @@ function BookSearch({ initialQuery, onPick }) {
   );
 }
 
-export default function BookForm({ book, genres, onSave, onDelete, onClose }) {
+export default function BookForm({ book, genres, onSave, onDelete, onClose, startWithQuote = false }) {
   const { t, errorText } = useI18n();
   const isNew = !book?.id;
   const [form, setForm] = useState(() => ({ ...emptyBook(), ...book }));
@@ -331,7 +331,7 @@ export default function BookForm({ book, genres, onSave, onDelete, onClose }) {
           </label>
           <div className="field field-full">
             <span>{t('field.notatki')}</span>
-            <NotesEditor value={form.notatki} onChange={(v) => set('notatki', v)} />
+            <NotesEditor value={form.notatki} onChange={(v) => set('notatki', v)} startWithQuote={startWithQuote} />
           </div>
         </div>
       </form>

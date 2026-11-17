@@ -10,7 +10,7 @@ function hueOf(title) {
 }
 
 // Tło bannera: rozmyta, powiększona okładka (albo kolor zastępczej okładki).
-function Backdrop({ book }) {
+export function Backdrop({ book }) {
   const [failed, setFailed] = useState(false);
   if (book.okladka_url && !failed) {
     return (

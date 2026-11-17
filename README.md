@@ -12,6 +12,7 @@ Dane są przechowywane w Twoim arkuszu Google, a aplikację można zainstalować
 - przycisk **„Poszukaj na Lubimyczytać”**, gdy okładki brak,
 - **„Uzupełnij brakujące okładki”** dla wszystkich książek naraz,
 - ocena 1–10, data rozpoczęcia i zakończenia, gatunek, liczba stron, notatki,
+- **karta książki**: dotknięcie okładki pokazuje kartę z oceną (zmiana jednym dotknięciem gwiazdki), datami, czasem czytania, notatkami i cytatami oraz przyciskami zależnymi od statusu; formularz otwiera się przyciskiem „Edytuj”,
 - **szybkie akcje**: przytrzymaj okładkę (na komputerze prawy przycisk myszy), aby oznaczyć książkę jako zaczętą lub przeczytaną dziś i od razu ją ocenić,
 - **ponowne czytanie** 🔁: przy przeczytanej książce szybka akcja „Czytam ponownie” tworzy nowy wpis z własnymi datami, oceną i formą (liczony osobno w statystykach),
 - **podsumowanie roku** (Statystyki → karta „Twój RRRR w książkach”; od 15 grudnia do końca stycznia oraz dla minionych lat): 8 ekranów jak relacje – liczby, top 3, rekordy, profil czytelnika, cytat roku, porównanie z poprzednim rokiem i grafika 1080×1920 do zapisania lub udostępnienia,

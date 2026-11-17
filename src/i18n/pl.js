@@ -283,4 +283,16 @@ export default {
   'ysFormPct.e-book': '{pct}% w e-bookach',
 
   unsavedConfirm: 'Masz niezapisane zmiany. Zamknąć bez zapisywania?',
+
+  // Karta książki
+  cardEdit: 'Edytuj',
+  cardYourRating: 'Twoja ocena',
+  cardRateHint: 'Dotknij gwiazdki, aby zmienić ocenę',
+  cardReadingTime: 'Czas czytania',
+  cardReadingSince: 'Czytasz od',
+  cardRateLater: 'po przeczytaniu',
+  cardNotesAndQuotes: 'Notatki i cytaty',
+  cardNoNotes: 'Brak notatek. Dodaj wrażenia albo ciekawy cytat.',
+  cardStartReading: 'Zaczynam czytać',
+  cardFinished: 'Przeczytana! Jak ją oceniasz?',
 };

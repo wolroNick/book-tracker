@@ -13,6 +13,7 @@ import SettingsDialog from './components/SettingsDialog.jsx';
 import FillCoversDialog from './components/FillCoversDialog.jsx';
 import StatsView from './components/StatsView.jsx';
 import QuickActions from './components/QuickActions.jsx';
+import BookCard from './components/BookCard.jsx';
 import GenresDialog from './components/GenresDialog.jsx';
 import QuotesView, { QuoteTeaser } from './components/Quotes.jsx';
 import { extractQuotes } from './lib/quotes.js';
@@ -48,6 +49,14 @@ export default function App() {
   const [view, setViewState] = useState(() => load('bt.view', 'grid'));
   const [filters, setFiltersState] = useState(() => ({ ...DEFAULT_FILTERS, ...load('bt.filters', {}), query: '' }));
   const [editing, setEditing] = useState(null); // null | {} (nowa) | książka
+  const [editWithQuote, setEditWithQuote] = useState(false); // formularz otwarty od razu z polem cytatu
+  // Karta książki – trzymamy id, żeby zawsze pokazywać aktualne dane po zapisie.
+  const [viewingId, setViewingId] = useState(null);
+  const openBook = useCallback((b) => setViewingId(b.id), []);
+  const editBook = (b, withQuote = false) => {
+    setEditWithQuote(withQuote);
+    setEditing(b);
+  };
   const [showSettings, setShowSettings] = useState(!configured);
   const [showFill, setShowFill] = useState(false);
   const [showFilters, setShowFilters] = useState(false);
@@ -108,6 +117,8 @@ export default function App() {
     save('bt.lastQuote', picked.id);
   }, [quotes, sessionQuoteId]);
   const sessionQuote = quotes.find((q) => q.id === sessionQuoteId) || null;
+  const viewingBook = viewingId ? books.find((b) => b.id === viewingId) || null : null;
+  const closeCard = useCallback(() => setViewingId(null), []);
   // Cytat, do którego przewinąć zakładkę „Cytaty” (po dotknięciu cytatu na ekranie głównym).
   const [focusQuoteId, setFocusQuoteId] = useState(null);
   const clearFocusQuote = useCallback(() => setFocusQuoteId(null), []);
@@ -213,14 +224,14 @@ export default function App() {
         {bulkMsg && <div className={`msg banner ${bulkMsg.ok ? 'msg-ok' : 'msg-error'}`}>{bulkMsg.text}</div>}
 
         {tab === 'quotes' ? (
-          <QuotesView quotes={quotes} onOpenBook={setEditing} focusId={focusQuoteId} onFocusDone={clearFocusQuote} />
+          <QuotesView quotes={quotes} onOpenBook={openBook} focusId={focusQuoteId} onFocusDone={clearFocusQuote} />
         ) : tab === 'stats' ? (
           <StatsView
             books={books}
             goals={goals}
             setGoal={setGoal}
             goalsSynced={syncedWithSheet}
-            onOpen={setEditing}
+            onOpen={openBook}
           />
         ) : (
         <>
@@ -231,7 +242,7 @@ export default function App() {
           onOpenFilters={() => setShowFilters(true)}
         />
 
-        {showNowReading && <NowReading books={readingNow} onOpen={setEditing} onQuick={openQuick} />}
+        {showNowReading && <NowReading books={readingNow} onOpen={openBook} onQuick={openQuick} />}
         {showNowReading && <QuoteTeaser
             quote={sessionQuote}
             onOpen={() => {
@@ -287,9 +298,9 @@ export default function App() {
         ) : visible.length === 0 ? (
           <p className="empty">{t('noResults')}</p>
         ) : view === 'grid' ? (
-          <BookGrid key={listKey} books={visible} onOpen={setEditing} onQuick={openQuick} />
+          <BookGrid key={listKey} books={visible} onOpen={openBook} onQuick={openQuick} />
         ) : (
-          <BookList key={listKey} books={visible} onOpen={setEditing} onQuick={openQuick} />
+          <BookList key={listKey} books={visible} onOpen={openBook} onQuick={openQuick} />
         )}
         </>
         )}
@@ -305,7 +316,7 @@ export default function App() {
         <button
           type="button"
           className="nav-add press"
-          onClick={() => (configured ? setEditing({}) : setShowSettings(true))}
+          onClick={() => (configured ? editBook({}) : setShowSettings(true))}
           aria-label={t('add')}
         >
           <PlusIcon />
@@ -322,7 +333,7 @@ export default function App() {
       <button
         type="button"
         className="fab desktop-only"
-        onClick={() => (configured ? setEditing({}) : setShowSettings(true))}
+        onClick={() => (configured ? editBook({}) : setShowSettings(true))}
         aria-label={t('add')}
         title={t('add')}
       >
@@ -330,11 +341,24 @@ export default function App() {
       </button>
       )}
 
+      {viewingBook ? (
+        <BookCard
+          key={`card-${viewingBook.id}`}
+          book={viewingBook}
+          onSave={saveBook}
+          canReread={!scriptOutdated}
+          onEdit={() => editBook(viewingBook)}
+          onAddQuote={() => editBook(viewingBook, true)}
+          onClose={closeCard}
+        />
+      ) : null}
+
       {editing && (
         <BookForm
-          key={editing.id || 'new'}
+          key={`form-${editing.id || 'new'}`}
           book={editing}
           genres={genres}
+          startWithQuote={editWithQuote}
           onSave={saveBook}
           onDelete={deleteBook}
           onClose={() => setEditing(null)}
@@ -343,13 +367,13 @@ export default function App() {
 
       {quick && (
         <QuickActions
-          key={quick.id}
+          key={`quick-${quick.id}`}
           book={quick}
           onSave={saveBook}
           canReread={!scriptOutdated}
           onEdit={(b) => {
             setQuick(null);
-            setEditing(b);
+            editBook(b);
           }}
           onClose={() => setQuick(null)}
         />
@@ -391,7 +415,7 @@ export default function App() {
           onSaveMany={saveMany}
           onEdit={(b) => {
             setShowFill(false);
-            setEditing(b);
+            editBook(b);
           }}
           onClose={() => setShowFill(false)}
         />

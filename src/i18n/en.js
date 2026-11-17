@@ -269,4 +269,15 @@ export default {
   'ysFormPct.e-book': '{pct}% as e-books',
 
   unsavedConfirm: 'You have unsaved changes. Close without saving?',
+
+  cardEdit: 'Edit',
+  cardYourRating: 'Your rating',
+  cardRateHint: 'Tap a star to change the rating',
+  cardReadingTime: 'Reading time',
+  cardReadingSince: 'Reading for',
+  cardRateLater: 'after reading',
+  cardNotesAndQuotes: 'Notes and quotes',
+  cardNoNotes: 'No notes yet. Add your thoughts or an interesting quote.',
+  cardStartReading: 'Start reading',
+  cardFinished: 'Finished! How would you rate it?',
 };

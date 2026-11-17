@@ -5,11 +5,11 @@ import { quoteToNotes } from '../lib/quotes.js';
 import { QuoteIcon } from './Icons.jsx';
 
 // Edytor notatek z paskiem formatowania i podglądem.
-export default function NotesEditor({ value, onChange }) {
+export default function NotesEditor({ value, onChange, startWithQuote = false }) {
   const { t } = useI18n();
   const ref = useRef(null);
   const [mode, setMode] = useState(value ? 'preview' : 'edit');
-  const [quoteForm, setQuoteForm] = useState(null); // null | { text, page }
+  const [quoteForm, setQuoteForm] = useState(startWithQuote ? { text: '', page: '' } : null); // null | { text, page }
 
   // Dopisuje cytat na końcu notatek jako linie „> …” z numerem strony.
   const addQuote = () => {
