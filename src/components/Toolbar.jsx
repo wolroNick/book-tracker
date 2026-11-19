@@ -3,7 +3,7 @@ import { useI18n } from '../i18n/index.jsx';
 import { FORMS, STATUSES } from '../lib/books.js';
 import { FilterIcon, FormIcon, SearchIcon, SortIcon } from './Icons.jsx';
 
-export const SORT_FIELDS = ['added', 'tytul', 'autor', 'data_zakonczenia', 'data_rozpoczecia', 'ocena'];
+export const SORT_FIELDS = ['reading', 'added', 'tytul', 'autor', 'data_zakonczenia', 'data_rozpoczecia', 'ocena'];
 const RATING_STEPS = [0, 6, 7, 8, 9, 10];
 
 // Liczba aktywnych filtrów (bez wyszukiwania i sortowania) – pokazywana przy przycisku „Filtry”.

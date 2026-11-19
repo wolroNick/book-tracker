@@ -4,7 +4,7 @@ import { useBooks } from './hooks/useBooks.js';
 import { useGoals } from './hooks/useGoals.js';
 import { useBackHandler } from './hooks/useBackHandler.js';
 import { load, save } from './lib/storage.js';
-import { STATUSES } from './lib/books.js';
+import { STATUSES, compareReading, sortByReading } from './lib/books.js';
 import Toolbar, { FiltersSheet, activeFilterCount } from './components/Toolbar.jsx';
 import { BookGrid, BookList, SkeletonGrid } from './components/BookViews.jsx';
 import NowReading from './components/NowReading.jsx';
@@ -20,7 +20,18 @@ import QuotesView, { QuoteTeaser } from './components/Quotes.jsx';
 import { extractQuotes } from './lib/quotes.js';
 import { BooksIcon, ChartIcon, GearIcon, GridIcon, ImageIcon, ListIcon, PlusIcon, QuoteIcon, RefreshIcon, SettingsIcon } from './components/Icons.jsx';
 
-const DEFAULT_FILTERS = { query: '', status: 'all', genre: '', forma: '', minRating: 0, sort: 'added', desc: true };
+const DEFAULT_FILTERS = { query: '', status: 'all', genre: '', forma: '', minRating: 0, sort: 'reading', desc: true };
+
+// Zapamiętane filtry; jednorazowo przestawiamy dawne domyślne sortowanie na „kolejność czytania”.
+function loadFilters() {
+  const stored = load('bt.filters', {});
+  if (!stored.readingSortDefault) {
+    stored.sort = 'reading';
+    stored.desc = true;
+    stored.readingSortDefault = true;
+  }
+  return { ...DEFAULT_FILTERS, ...stored, query: '' };
+}
 
 // Porównanie bez wielkości liter i polskich znaków diakrytycznych.
 const fold = (s) => s.toLocaleLowerCase('pl').normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/ł/g, 'l');
@@ -103,7 +114,7 @@ export default function App() {
   // „Wstecz” na zakładce Cytaty/Statystyki wraca do Książek.
   useBackHandler(tab !== 'books', () => setTab('books'));
   const [view, setViewState] = useState(() => load('bt.view', 'grid'));
-  const [filters, setFiltersState] = useState(() => ({ ...DEFAULT_FILTERS, ...load('bt.filters', {}), query: '' }));
+  const [filters, setFiltersState] = useState(loadFilters);
   const [editing, setEditing] = useState(null); // null | {} (nowa) | książka
   const [editWithQuote, setEditWithQuote] = useState(false); // formularz otwarty od razu z polem cytatu
   // Karta książki – trzymamy id, żeby zawsze pokazywać aktualne dane po zapisie.
@@ -139,7 +150,7 @@ export default function App() {
     setFiltersState((prev) => {
       const next = typeof updater === 'function' ? updater(prev) : updater;
       const { query, ...persist } = next;
-      save('bt.filters', persist);
+      save('bt.filters', { ...persist, readingSortDefault: true });
       return next;
     });
   };
@@ -159,7 +170,8 @@ export default function App() {
   const missingCovers = useMemo(() => books.filter((b) => !b.okladka_url), [books]);
   const missingForm = useMemo(() => books.filter((b) => !b.forma), [books]);
   const readingNow = useMemo(() => books.filter((b) => b.status === 'czytam'), [books]);
-  const quotes = useMemo(() => extractQuotes(books), [books]);
+  // Cytaty w kolejności czytania książek (od ostatnio czytanej).
+  const quotes = useMemo(() => extractQuotes(sortByReading(books)), [books]);
 
   // Cytat na ekranie głównym: losowany raz przy otwarciu aplikacji,
   // inny niż przy poprzednim otwarciu (o ile jest więcej niż jeden).
@@ -218,6 +230,7 @@ export default function App() {
     const dir = filters.desc ? -1 : 1;
     list.sort((x, y) => {
       if (filters.sort === 'added') return (x.index - y.index) * dir;
+      if (filters.sort === 'reading') return compareReading(x.b, y.b, x.index, y.index) * -dir;
       const f = filters.sort;
       // Puste wartości zawsze na końcu.
       const ex = !x.b[f], ey = !y.b[f];

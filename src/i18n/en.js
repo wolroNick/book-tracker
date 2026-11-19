@@ -18,6 +18,7 @@ export default {
   anyRating: 'Any rating',
   ratingFrom: 'from {n}',
   sortBy: 'Sort',
+  'sort.reading': 'Reading order',
   'sort.added': 'Date added',
   'sort.tytul': 'Title',
   'sort.autor': 'Author',

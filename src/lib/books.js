@@ -74,3 +74,28 @@ export function isIsbn(value) {
   const s = cleanIsbn(value);
   return /^(\d{9}[\dX]|\d{13})$/.test(s);
 }
+
+// „Kolejność czytania” (malejąco): najpierw czytane teraz (od ostatnio zaczętej),
+// potem przeczytane (od ostatnio skończonej), na końcu do przeczytania (od ostatnio dodanej).
+// ia/ib – pozycje w arkuszu (kolejność dodania), używane przy braku dat.
+const READING_GROUP = { czytam: 0, przeczytane: 1, 'do przeczytania': 2 };
+export function compareReading(a, b, ia, ib) {
+  const ga = READING_GROUP[a.status] ?? 3;
+  const gb = READING_GROUP[b.status] ?? 3;
+  if (ga !== gb) return ga - gb;
+  const da = a.status === 'czytam' ? a.data_rozpoczecia : a.status === 'przeczytane' ? a.data_zakonczenia || a.data_rozpoczecia : '';
+  const db = b.status === 'czytam' ? b.data_rozpoczecia : b.status === 'przeczytane' ? b.data_zakonczenia || b.data_rozpoczecia : '';
+  if (da !== db) {
+    if (!da) return 1; // bez daty – na końcu grupy
+    if (!db) return -1;
+    return da < db ? 1 : -1; // nowsze wyżej
+  }
+  return ib - ia; // później dodane wyżej
+}
+
+export function sortByReading(books) {
+  return books
+    .map((b, i) => ({ b, i }))
+    .sort((x, y) => compareReading(x.b, y.b, x.i, y.i))
+    .map((x) => x.b);
+}

@@ -18,6 +18,7 @@ export default {
   anyRating: 'Dowolna ocena',
   ratingFrom: 'od {n}',
   sortBy: 'Sortuj',
+  'sort.reading': 'Kolejność czytania',
   'sort.added': 'Kolejność dodania',
   'sort.tytul': 'Tytuł',
   'sort.autor': 'Autor',
