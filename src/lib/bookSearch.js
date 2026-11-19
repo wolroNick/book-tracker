@@ -23,6 +23,7 @@ function mapGoogle(item) {
     liczba_stron: v.pageCount ? String(v.pageCount) : '',
     rok: (v.publishedDate || '').slice(0, 4),
     okladka_url: googleCover(v),
+    jezyk: v.language || '',
   };
 }
 
@@ -109,4 +110,45 @@ export async function findCover(book) {
 export function lubimyczytacUrl(book) {
   const phrase = [book.tytul, book.autor].filter(Boolean).join(' ');
   return `https://lubimyczytac.pl/szukaj/ksiazki?phrase=${encodeURIComponent(phrase)}`;
+}
+
+// Szuka liczby stron (i ISBN, jeśli brakuje) dla istniejącej książki.
+// Kolejność: Google Books po ISBN, Google Books po tytule i autorze (wydania polskie najpierw),
+// Open Library po tytule i autorze. Zwraca { pages, isbn, source } albo null.
+export async function findPages(book) {
+  const isbn = cleanIsbn(book.isbn);
+  const pick = (list) => {
+    const withPages = list.filter((r) => Number(r.liczba_stron) > 0);
+    return withPages.find((r) => r.jezyk === 'pl') || withPages[0] || null;
+  };
+  if (isIsbn(isbn)) {
+    try {
+      const r = pick(await searchGoogle(`isbn:${isbn}`, 5));
+      if (r) return { pages: r.liczba_stron, isbn: '', source: 'Google Books' };
+    } catch { /* dalej */ }
+  }
+  if (book.tytul) {
+    const parts = [`intitle:${book.tytul}`];
+    if (book.autor) parts.push(`inauthor:${book.autor.split(',')[0]}`);
+    try {
+      const r = pick(await searchGoogle(parts.join(' '), 10));
+      if (r) return { pages: r.liczba_stron, isbn: isIsbn(isbn) ? '' : r.isbn, source: 'Google Books' };
+    } catch { /* dalej */ }
+    try {
+      const q = `title=${encodeURIComponent(book.tytul)}${book.autor ? `&author=${encodeURIComponent(book.autor.split(',')[0])}` : ''}`;
+      const res = await fetch(`https://openlibrary.org/search.json?${q}&limit=5&fields=number_of_pages_median,isbn`);
+      if (res.ok) {
+        const doc = ((await res.json()).docs || []).find((d) => d.number_of_pages_median > 0);
+        if (doc) {
+          const isbns = doc.isbn || [];
+          return {
+            pages: String(doc.number_of_pages_median),
+            isbn: isIsbn(isbn) ? '' : isbns.find((i) => i.length === 13) || '',
+            source: 'Open Library',
+          };
+        }
+      }
+    } catch { /* brak wyniku */ }
+  }
+  return null;
 }

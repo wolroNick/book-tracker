@@ -11,6 +11,7 @@ import NowReading from './components/NowReading.jsx';
 import BookForm from './components/BookForm.jsx';
 import SettingsDialog from './components/SettingsDialog.jsx';
 import FillCoversDialog from './components/FillCoversDialog.jsx';
+import FillPagesDialog from './components/FillPagesDialog.jsx';
 import StatsView from './components/StatsView.jsx';
 import QuickActions from './components/QuickActions.jsx';
 import BookCard from './components/BookCard.jsx';
@@ -88,6 +89,13 @@ export default function App() {
     if (prev) toast.show(t('toastDeleted', { title: prev.tytul }), { undo: () => saveBook(prev) });
   };
 
+  // Zbiorczy zapis z komunikatem i cofnięciem (np. uzupełnione liczby stron).
+  const saveManyWithUndo = async (list, text) => {
+    const prevs = list.map((b) => books.find((x) => x.id === b.id)).filter(Boolean);
+    await saveMany(list);
+    toast.show(text, { undo: () => saveMany(prevs) });
+  };
+
   // Zmiana gatunku w wielu książkach naraz (okno „Gatunki”).
   const saveGenreChange = async (list) => {
     const prevs = list.map((b) => books.find((x) => x.id === b.id)).filter(Boolean);
@@ -126,6 +134,7 @@ export default function App() {
   };
   const [showSettings, setShowSettings] = useState(!configured);
   const [showFill, setShowFill] = useState(false);
+  const [showPages, setShowPages] = useState(false);
   const [showFilters, setShowFilters] = useState(false);
   const [showGenres, setShowGenres] = useState(false);
   const [quick, setQuick] = useState(null);
@@ -169,6 +178,7 @@ export default function App() {
 
   const missingCovers = useMemo(() => books.filter((b) => !b.okladka_url), [books]);
   const missingForm = useMemo(() => books.filter((b) => !b.forma), [books]);
+  const missingPages = useMemo(() => books.filter((b) => !b.liczba_stron), [books]);
   const readingNow = useMemo(() => books.filter((b) => b.status === 'czytam'), [books]);
   // Cytaty w kolejności czytania książek (od ostatnio czytanej).
   const quotes = useMemo(() => extractQuotes(sortByReading(books)), [books]);
@@ -352,6 +362,11 @@ export default function App() {
               <ImageIcon /> {t('fillCovers', { n: missingCovers.length })}
             </button>
           )}
+          {configured && missingPages.length > 0 && (
+            <button type="button" className="btn btn-small" onClick={() => setShowPages(true)}>
+              {t('fillPages', { n: missingPages.length })}
+            </button>
+          )}
           {configured && !scriptOutdated && missingForm.length > 0 && (
             <button type="button" className="btn btn-small" onClick={setPaperForAll} disabled={bulkBusy}>
               {bulkBusy ? t('saving') : t('setPaper', { n: missingForm.length })}
@@ -478,6 +493,14 @@ export default function App() {
           onSave={setSettings}
           onOpenGenres={configured ? () => { setShowSettings(false); setShowGenres(true); } : null}
           onClose={() => setShowSettings(false)}
+        />
+      )}
+
+      {showPages && (
+        <FillPagesDialog
+          books={missingPages}
+          onSaveMany={(list) => saveManyWithUndo(list, t('fillPagesDone', { n: list.length }))}
+          onClose={() => setShowPages(false)}
         />
       )}
 

@@ -11,6 +11,7 @@ Dane są przechowywane w Twoim arkuszu Google, a aplikację można zainstalować
 - wyszukiwanie książki po tytule, autorze lub ISBN (Google Books i Open Library) z automatycznym uzupełnieniem danych i okładki,
 - przycisk **„Poszukaj na Lubimyczytać”**, gdy okładki brak,
 - **„Uzupełnij brakujące okładki”** dla wszystkich książek naraz,
+- **„Uzupełnij liczbę stron”**: wyszukiwanie liczby stron (i brakującego ISBN) w Google Books / Open Library z listą do sprawdzenia i poprawienia przed zapisem,
 - ocena 1–10, data rozpoczęcia i zakończenia, gatunek, liczba stron, notatki,
 - **karta książki**: dotknięcie okładki pokazuje kartę z oceną (zmiana jednym dotknięciem gwiazdki), datami, czasem czytania, notatkami i cytatami oraz przyciskami zależnymi od statusu; formularz otwiera się przyciskiem „Edytuj”,
 - **szybkie akcje**: przytrzymaj okładkę (na komputerze prawy przycisk myszy), aby oznaczyć książkę jako zaczętą lub przeczytaną dziś i od razu ją ocenić,

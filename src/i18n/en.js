@@ -294,4 +294,15 @@ export default {
   'toastStatus.czytam': '“{title}” – reading from today',
   'toastStatus.do przeczytania': '“{title}” – to read',
   toastGenre: { one: '“{from}” → “{to}” ({n} book)', other: '“{from}” → “{to}” ({n} books)' },
+
+  fillPages: 'Fill in page counts ({n})',
+  fillPagesTitle: 'Fill in page counts',
+  fillPagesIntro: { one: '{n} book has no page count. The app will look it up in Google Books and Open Library (by ISBN or title and author) and fill in a missing ISBN too. You will review the results before saving.', other: '{n} books have no page count. The app will look them up in Google Books and Open Library (by ISBN or title and author) and fill in missing ISBNs too. You will review the results before saving.' },
+  fillPagesFound: 'Found page counts for {found} of {total} books.',
+  fillPagesReviewHint: 'Check the results – different editions have different page counts. You can correct a number, type it in or untick a book. Only ticked books are saved.',
+  fillPagesFrom: 'source: {source}',
+  fillPagesNotFound: 'not found',
+  fillPagesInclude: 'Save the page count for “{title}”',
+  fillPagesSave: { one: 'Save {n} book', other: 'Save {n} books' },
+  fillPagesDone: { one: 'Page count filled in for {n} book', other: 'Page counts filled in for {n} books' },
 };

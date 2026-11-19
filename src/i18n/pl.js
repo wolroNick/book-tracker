@@ -310,4 +310,16 @@ export default {
   'toastStatus.czytam': '„{title}” – czytasz od dziś',
   'toastStatus.do przeczytania': '„{title}” – do przeczytania',
   toastGenre: { one: '„{from}” → „{to}” ({n} książka)', few: '„{from}” → „{to}” ({n} książki)', many: '„{from}” → „{to}” ({n} książek)', other: '„{from}” → „{to}” ({n} książki)' },
+
+  // Liczba stron
+  fillPages: 'Uzupełnij liczbę stron ({n})',
+  fillPagesTitle: 'Uzupełnij liczbę stron',
+  fillPagesIntro: { one: '{n} książka nie ma liczby stron. Aplikacja poszuka jej w Google Books i Open Library (po ISBN albo tytule i autorze), a przy okazji uzupełni brakujący ISBN. Przed zapisem zobaczysz wyniki i będziesz mógł je poprawić.', few: '{n} książki nie mają liczby stron. Aplikacja poszuka ich w Google Books i Open Library (po ISBN albo tytule i autorze), a przy okazji uzupełni brakujące ISBN. Przed zapisem zobaczysz wyniki i będziesz mógł je poprawić.', many: '{n} książek nie ma liczby stron. Aplikacja poszuka ich w Google Books i Open Library (po ISBN albo tytule i autorze), a przy okazji uzupełni brakujące ISBN. Przed zapisem zobaczysz wyniki i będziesz mógł je poprawić.', other: '{n} książki nie ma liczby stron. Aplikacja poszuka ich w Google Books i Open Library, a przed zapisem zobaczysz wyniki.' },
+  fillPagesFound: 'Znaleziono liczbę stron dla {found} z {total} książek.',
+  fillPagesReviewHint: 'Sprawdź wyniki – różne wydania mają różną liczbę stron. Możesz poprawić liczbę, wpisać ją ręcznie albo odznaczyć książkę. Zapisane zostaną tylko zaznaczone.',
+  fillPagesFrom: 'źródło: {source}',
+  fillPagesNotFound: 'nie znaleziono',
+  fillPagesInclude: 'Zapisz liczbę stron dla „{title}”',
+  fillPagesSave: { one: 'Zapisz {n} książkę', few: 'Zapisz {n} książki', many: 'Zapisz {n} książek', other: 'Zapisz {n} książki' },
+  fillPagesDone: { one: 'Uzupełniono liczbę stron w {n} książce', few: 'Uzupełniono liczbę stron w {n} książkach', many: 'Uzupełniono liczbę stron w {n} książkach', other: 'Uzupełniono liczbę stron w {n} książki' },
 };

@@ -770,3 +770,16 @@ body {
   .toast { animation-name: toastInTop; }
   @keyframes toastInTop { from { opacity: 0; transform: translateY(-16px); } }
 }
+
+/* Uzupełnianie liczby stron */
+.pages-list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; }
+.pages-row { display: flex; align-items: center; gap: 10px; padding: 10px 0; border-bottom: 1px solid var(--border); }
+.pages-row:last-child { border-bottom: none; }
+.pages-row input[type=checkbox] { width: 22px; height: 22px; min-height: 0; flex: none; accent-color: var(--accent); }
+.pages-book { display: flex; flex-direction: column; gap: 2px; flex: 1; min-width: 0; font-size: 0.9rem; }
+.pages-book strong { overflow: hidden; text-overflow: ellipsis; }
+.pages-book .muted { font-size: 0.8rem; }
+.pages-row.missing .pages-book .muted { color: #8a4b0f; }
+.pages-lc { display: inline-flex; align-items: center; gap: 4px; font-size: 0.8rem; color: #8a4b0f; }
+.pages-lc svg { width: 13px; height: 13px; }
+.pages-input { width: 76px; flex: none; text-align: right; }
